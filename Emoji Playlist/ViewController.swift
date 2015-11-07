@@ -10,41 +10,33 @@ import UIKit
 import iAd
 
 let EIShowHelpPopupNotification = "com.cal.emojicon.show-help-popup"
-let EIChangeColorNotification = "com.cal.emojicon.change-color"
 let EIShowKeyboardNotification = "com.cal.emojicon.show-keyboard"
-let EIHideAdNotification = "com.cal.emojicon.hide-ad"
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ADBannerViewDelegate {
-    
-    var emojis : [String] = []
-    var savedCells : [Int] = []
-    var currentColor : UIColor = UIColor.whiteColor()
-    
-    let about : [(emoji: String, text: String)] = [
-        ("", "how to use Emojicon"),
-        ("😀", "1️⃣ open emoji keyboard"),
-        ("👇", "2️⃣ type emoji"),
-        ("🎨", "3️⃣ choose background color 🔝"),
-        ("📲", "4️⃣ save to camera roll"),
-        ("🌐", "5️⃣ use it anywhere")
-    ]
+class ViewController: UIViewController, ADBannerViewDelegate {
     
     @IBOutlet weak var hiddenField: UITextField!
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var showKeyboardButton: UIButton!
     @IBOutlet weak var openKeyboardView: UIView!
     @IBOutlet weak var openKeyboardPosition: NSLayoutConstraint!
+    @IBOutlet weak var contentHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var topBar: UIView!
+    @IBOutlet weak var emojiView: UIView!
+    @IBOutlet weak var emojiLabel: UILabel!
+    @IBOutlet weak var emojiNameLabel: UILabel!
+    @IBOutlet weak var previousEmojiImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(hue: 0.0, saturation: 0.6, brightness: 0.8, alpha: 1.0)
+        
+        updateContentHeight(animate: false)
+        changeToEmoji("😀", animate: false)
+        emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardDidChangeFrameNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardWillChangeFrameNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showHelpPopup:", name: EIShowHelpPopupNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "colorChanged:", name: EIChangeColorNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showKeyboard", name: EIShowKeyboardNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "hideAd", name: EIHideAdNotification, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransformMakeScale(0.01, 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
@@ -52,9 +44,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         showKeyboardButton.alpha = 0.0
         UIView.animateWithDuration(0.5, delay: 1.0, options: [], animations: {
-                self.showKeyboardButton.alpha = 1.0
+            self.showKeyboardButton.alpha = 1.0
         }, completion: nil)
     }
+    
+    //MARK: - Showing and Hiding the Keyboard
     
     @IBAction func showKeyboard() { //called from app delegate or UIButton
         hiddenField.becomeFirstResponder()
@@ -75,12 +69,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let info = notification.userInfo!
         let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]!
         
-        
         let rawFrame = value.CGRectValue
         let keyboardFrame = view.convertRect(rawFrame, fromView: nil)
         self.keyboardHeight = keyboardFrame.height
         
-        updateContentInset()
+        let duration = "\(info[UIKeyboardAnimationDurationUserInfoKey]!)"
+        updateContentHeight(animate: duration != "0")
         
         if !adBanner.bannerLoaded {
             //ad is not on screen
@@ -100,84 +94,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
-    func colorChanged(notification: NSNotification) {
-        //scroll it to the top
-        self.tableView.setContentOffset(CGPointZero, animated: true)
-        
-        if let color = notification.object as? UIColor {
-            currentColor = color
-            
-            for cell in tableView.visibleCells {
-                if let cell = cell as? EmojiCell {
-                    cell.labelContainer.backgroundColor = color
-                    cell.switchBackToDownloadButton()
-                }
-            }
-        }
-    }
-    
-    func updateContentInset() {
-        let contentInset = self.keyboardHeight + (adPosition.constant > 0 ? (adBanner.hidden ? 0 : 50) : 0)
-        tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0, contentInset, 0.0)
-        tableView.scrollIndicatorInsets = tableView.contentInset
-        
-        //update frame of Open Keyboard popup
-        let screenHeight = UIScreen.mainScreen().bounds.height
-        let currentCenter = screenHeight / 2.0
-        let availableSpace = screenHeight - contentInset + 20.0
-        let availableCenter = availableSpace / 2.0
-        let centerOffset = -(currentCenter - availableCenter)
-    
-        UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
-            self.openKeyboardPosition.constant = centerOffset
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-        
-    }
-    
-    func showHelpPopup(notification: NSNotification) {
-        let popup = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("help") 
-        
-        let nav = LightNavigation(rootViewController: popup)
-        nav.navigationBar.translucent = false
-        popup.view.frame = CGRectMake(0, 0, -44, self.view.bounds.size.height)
-        
-        if let presentation = nav.presentationController as? UIPopoverPresentationController, source = notification.object as? UIView {
-            presentation.sourceView = source
-        }
-        
-        let closeButton = UIBarButtonItem(title: "got it", style: UIBarButtonItemStyle.Plain, target: self, action: "closeHelpPopup")
-        closeButton.tintColor = UIColor.whiteColor()
-        popup.navigationItem.rightBarButtonItem = closeButton
-        
-        popup.navigationController?.navigationBar.barTintColor = self.view.backgroundColor
-        let font = UIFont(name: "HelveticaNeue-Light", size: 25.0)!
-        popup.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName : font, NSForegroundColorAttributeName : UIColor.whiteColor()]
-        
-        nav.modalPresentationStyle = UIModalPresentationStyle.Popover
-        nav.modalPresentationCapturesStatusBarAppearance = true
-        self.presentViewController(nav, animated: true, completion: nil)
-        self.keyboardHidden(true)
-    }
-    
-    func closeHelpPopup() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        self.adPosition.constant = -55
-        self.view.layoutIfNeeded()
-        keyboardHidden = true
-        self.hiddenField.becomeFirstResponder()
-    }
-    
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     var isAnimatingPopup = false
@@ -201,10 +119,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
-    //pragma MARK: - emoji inputs and table
+    func updateContentHeight(animate animate: Bool = true) {
+        let adBannerHidden = adPosition.constant == -adBanner.frame.height || !shouldShowAds || adBanner.hidden || adBanner.alpha == 0.0
+        let availableHeight = self.view.frame.height - keyboardHeight - (adBannerHidden ? 0 : adBanner.frame.height)
+        contentHeight.constant = availableHeight
+        
+        UIView.animateWithDuration(animate ? 0.4 : 0.0, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    //MARK: - emoji input and processing
     
     @IBAction func hiddenInputReceived(sender: UITextField, forEvent event: UIEvent) {
         let rawEmoji = sender.text!
+        sender.text = nil
+        
         if rawEmoji == "" { return }
         var emoji = rawEmoji as NSString
         
@@ -230,109 +160,263 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         }
         
-        emojis.insert(rawEmoji, atIndex: 0)
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 2, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Right)
-        //tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), atScrollPosition: .Top, animated: true)
-        let contentHeight = tableView.contentSize.height
-        
-        var availableHeight = self.view.frame.height - 20.0
-        availableHeight -= keyboardHeight
-        if adPosition.constant > 0 {
-            availableHeight -= adBanner.frame.height
-        }
-        
-        if contentHeight > availableHeight {
-            tableView.setContentOffset(CGPointMake(0, 0), animated: true)
-        }
-        
-        sender.text = ""
+        changeToEmoji(rawEmoji)
     }
     
+    func changeToEmoji(emoji: String, animate: Bool = true) {
+        copyCurrentEmojiToImageView()
+        
+        emojiLabel.text = emoji
+        emojiNameLabel.text = nameForEmoji(emoji)
+        
+        let primaryColor = colorForImage(imageForEmoji(emoji))
+        emojiView.backgroundColor = primaryColor
+        let (text, border) = secondaryColorsForBackground(primaryColor)
+        emojiNameLabel.textColor = text
+        topBar.backgroundColor = border
+        self.view.backgroundColor = primaryColor
+        
+        let backgroundLuma = colorLuma(border)
+        let style = backgroundLuma > 0.28 ? UIStatusBarStyle.Default : UIStatusBarStyle.LightContent
+        UIApplication.sharedApplication().setStatusBarStyle(style, animated: true)
+        
+        if animate { animateTransition() }
+    }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        //first is color picker title, then picker itself
-        if indexPath.item == 0 {
-            return tableView.dequeueReusableCellWithIdentifier("backgroundTitle")!
-        }
-        
-        if indexPath.item == 1 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("colorCell", forIndexPath: indexPath) as! ColorPickerCell
-            cell.beingDisplayed = true
-            let collection = cell.collectionView
-            collection.contentOffset = CGPointMake(cell.frame.height * 2, 0)
-            delay(0.3) {
-                cell.beingDisplayed = false
-            }
-            return cell
-        }
-        
-        //everything else used Emoji Cell
-        let cell = tableView.dequeueReusableCellWithIdentifier("emojiCell") as! EmojiCell
-        cell.labelContainer.backgroundColor = currentColor
-        
-        if indexPath.item > emojis.count + 1 {
-            let aboutIndex = indexPath.item - emojis.count - 2
-            let aboutText = about[aboutIndex]
+    func nameForEmoji(emoji: String) -> String {
             
-            if aboutText.text == "how to use Emojicon" {
-                return tableView.dequeueReusableCellWithIdentifier("instructions")!
-            }
-            
-            cell.decorateCell(emoji: aboutText.emoji, text: aboutText.text, isLast: aboutText.text.hasSuffix("anywhere"))
-        }
+        let cfstring = NSMutableString(string: emoji) as CFMutableString
+        var range = CFRangeMake(0, CFStringGetLength(cfstring))
+        CFStringTransform(cfstring, &range, kCFStringTransformToUnicodeName, false)
+        let capitalName = "\(cfstring)"
         
+        if !capitalName.hasPrefix("\\") { //is number emoji
+            var splits = capitalName.componentsSeparatedByString("\\")
+            return ((capitalName as NSString).length > 1 ? "keycap " : "") + splits[0]
+        }
+            
         else {
-            cell.decorateCell(emojis[indexPath.item - 2])
-        }
-        
-        return cell
-    }
-    
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.item > emojis.count + 1 {
-            let aboutIndex = indexPath.item - emojis.count - 2
-            let aboutText = about[aboutIndex]
+            var splits = capitalName.componentsSeparatedByString("}")
+            if splits.last == "" { splits.removeLast() }
             
-            if aboutText.text == "how to use Emojicon" {
-                return 30
+            for i in 0 ..< splits.count {
+                if (splits[i] as NSString).length > 3 {
+                    splits[i] = (splits[i] as NSString).substringFromIndex(3).lowercaseString
+                }
+            }
+            
+            if splits.count == 1 {
+                return splits[0]
+            }
+            
+            if splits.count == 2{
+                if splits[1].hasPrefix("emoji modifier") || splits[1].hasPrefix("variation selector"){ //skin tone emojis
+                    return splits[0]
+                }
+                else { //flags are awful
+                    var flagName = ""
+                    for split in splits {
+                        let splitNS = split.uppercaseString as NSString
+                        flagName += splitNS.substringFromIndex(splitNS.length - 1)
+                    }
+                    
+                    if let countryName = countryNameForCode(flagName){
+                        flagName = countryName
+                    }
+                    
+                    return flagName + " flag"
+                }
             }
         }
         
-        if indexPath.item == 0 { //is top cell, "background color" title
-            return 30
+        if emoji == "👁‍🗨" { return "eye in speech bubble" }
+        //still nothing somehow
+        return "family" //can only be family as far as I know
+    }
+    
+    func imageForEmoji(emojiString: String) -> UIImage {
+        let size = CGRectMake(0.0, 0.0, 100.0, 100.0)
+        UIGraphicsBeginImageContext(size.size)
+        let context = UIGraphicsGetCurrentContext()
+        
+        CGContextSetFillColorWithColor(context, UIColor.whiteColor().CGColor)
+        CGContextFillRect(context, size)
+        CGContextSetAllowsAntialiasing(context, true)
+        CGContextSetShouldAntialias(context, true)
+        
+        let emoji = emojiString as NSString
+        let font = UIFont.systemFontOfSize(75.0)
+        let attributes = [NSFontAttributeName : font as AnyObject]
+        let drawSize = emoji.boundingRectWithSize(size.size, options: .UsesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
+        
+        let xOffset = (size.width - drawSize.width) / 2
+        let yOffset = (size.height - drawSize.height) / 2
+        let drawPoint = CGPointMake(xOffset, yOffset)
+        let drawRect = CGRect(origin: drawPoint, size: drawSize)
+        emoji.drawInRect(CGRectIntegral(drawRect), withAttributes: attributes)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
+    func colorForImage(uiimage: UIImage) -> UIColor {
+        
+        guard let image = uiimage.CGImage else { return UIColor.whiteColor() }
+        let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        typealias Pixel = (red: Int, green: Int, blue: Int)
+        func pixelAtPoint(x: Int, _ y: Int) -> Pixel {
+            let pixelIndex = ((Int(uiimage.size.width) * y) + x) * 4
+            let b = Int(data[pixelIndex])
+            let g = Int(data[pixelIndex + 1])
+            let r = Int(data[pixelIndex + 2])
+            return (r, g, b)
         }
-            
-        return 60
+        
+        func clampInt(int: Int, onInterval interval: Int) -> Int {
+            return Int(int / interval) * interval
+        }
+        
+        var countMap: [String : (color: Pixel, count: Int)] = [:]
+        var maximum: (color: Pixel, count: Int)?
+        
+        for y in 0 ..< Int(uiimage.size.width) {
+            for x in 0 ..< Int(uiimage.size.height) {
+                let pixel = pixelAtPoint(x, y)
+                
+                //ignore if this color is close to grayscale
+                let average = (pixel.red + pixel.green + pixel.blue) / 3
+                if abs(pixel.red - average) < 5
+                    && abs(pixel.green - average) < 5
+                    && abs(pixel.red - average) < 5 {
+                        continue
+                } 
+                
+                let red = clampInt(pixel.red, onInterval: 20)
+                let green = clampInt(pixel.green, onInterval: 20)
+                let blue = clampInt(pixel.blue, onInterval: 20)
+                let key = "r:\(red) g:\(green) b:\(blue)"
+                
+                var (_, currentCount) = countMap[key] ?? ((0, 0, 0), 0)
+                currentCount += 1
+                countMap.updateValue((pixel, currentCount), forKey: key)
+                
+                if currentCount > maximum?.count {
+                    maximum = (pixel, currentCount)
+                }
+            }
+        }
+        
+        let color = maximum?.color ?? (red: 255, green: 255, blue: 255)
+        return UIColor(red: CGFloat(color.red) / 255.0, green: CGFloat(color.green) / 255.0, blue: CGFloat(color.blue) / 255.0, alpha: 1.0)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return emojis.count + about.count + 2
+    func colorLuma(color: UIColor) -> CGFloat{
+        var r : CGFloat  = 0.0
+        var g : CGFloat  = 0.0
+        var b : CGFloat  = 0.0
+        color.getRed(&r, green: &g, blue: &b, alpha: nil)
+        let lumaR : CGFloat = CGFloat(r) * 0.3
+        let lumaG : CGFloat = CGFloat(g) * 0.59
+        let lumaB : CGFloat = CGFloat(b) * 0.11
+        return (lumaR + lumaG + lumaB) / 3
     }
     
-    //pragma MARK: - ad delegate
+    func secondaryColorsForBackground(background: UIColor) -> (text: UIColor, border: UIColor) {
+        
+        var hue : CGFloat  = 0.0
+        var sat : CGFloat  = 0.0
+        var bright : CGFloat  = 0.0
+        background.getHue(&hue, saturation: &sat, brightness: &bright, alpha: nil)
+        let backgroundLuma = colorLuma(background)
+        
+        var text = UIColor(hue: hue, saturation: sat, brightness: bright + 0.35, alpha: 1.0)
+        let textLuma = colorLuma(text)
+        let lumaDiff = abs(textLuma - backgroundLuma)
+        if lumaDiff < 0.05 && textLuma > 0.06 {
+            text = UIColor(hue: hue, saturation: sat, brightness: bright - 0.35, alpha: 1.0)
+        }
+        
+        let border = UIColor(hue: hue, saturation: sat, brightness: bright - 0.1, alpha: 1.0)
+        
+        return (text, border)
+    }
+    
+    //MARK: - Transition between emoji
+    
+    func animateTransition() {
+        let frame = emojiView.frame
+        let diameter = min(frame.size.height, frame.size.width) * 2.0
+        let internalFrame = CGRect(origin: CGPointMake(-self.view.frame.width / 2.0, -self.view.frame.height / 4.0), size: CGSizeMake(diameter, diameter))
+        
+        let circle = CALayer()
+        circle.frame = internalFrame
+        circle.cornerRadius = diameter / 2.0
+        circle.backgroundColor = UIColor.blackColor().CGColor
+        
+        emojiView.layer.masksToBounds = true
+        emojiView.layer.mask = circle
+        
+        //animate mask
+        let animation = CABasicAnimation(keyPath: "transform.scale")
+        animation.fromValue = 0.0
+        animation.toValue = 1.0
+        animation.duration = 0.5
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
+        
+        circle.addAnimation(animation, forKey: "scale")
+        
+        //animate opacity real fast
+        emojiView.alpha = 0.0
+        UIView.animateWithDuration(0.15, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+            self.emojiView.alpha = 1.0
+        }, completion: nil)
+        
+        //animate scale
+        emojiNameLabel.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        emojiNameLabel.alpha = 0.0
+        emojiLabel.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        emojiLabel.alpha = 0.0
+        
+        UIView.animateWithDuration(0.6, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
+            self.emojiNameLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.emojiNameLabel.alpha = 1.0
+            self.emojiLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.emojiLabel.alpha = 1.0
+        }, completion: nil)
+    }
+    
+    func copyCurrentEmojiToImageView() {
+        UIGraphicsBeginImageContextWithOptions(emojiView.bounds.size, true, 0.0)
+        emojiView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        previousEmojiImage.image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+    }
+    
+    //MARK: - ad delegate
     
     @IBOutlet weak var adBanner: ADBannerView!
     @IBOutlet weak var adPosition: NSLayoutConstraint!
     var keyboardHeight : CGFloat = 0
+    var shouldShowAds = false
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
-        //do not show ad if 4S (aspect != 9:16) (9/16 = 0.5625)
-        let aspect = self.view.frame.width / self.view.frame.height
-        if (aspect > 0.6 || aspect < 0.5) && (self.view.frame.height < 800.0) {
-            self.updateContentInset()
+        if (!shouldShowAds) {
+            self.updateContentHeight()
             adBanner.hidden = true
             return
         }
         
         if adPosition.constant != keyboardHeight {
             adPosition.constant = keyboardHeight
-            UIView.animateWithDuration(1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
                     self.view.layoutIfNeeded()
                 }, completion: { success in
-                    self.updateContentInset()
+                    self.updateContentHeight()
             })
         }
         
@@ -340,8 +424,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
         adPosition.constant = -banner.frame.height
-        UIView.animateWithDuration(1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: { success in
-                self.updateContentInset()
+        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: { success in
+                self.updateContentHeight()
         })
     }
     

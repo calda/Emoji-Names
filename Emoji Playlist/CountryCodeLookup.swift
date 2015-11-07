@@ -12,7 +12,8 @@ func countryNameForCode(code: String) -> String? {
     return countryCodes[code]
 }
 
-let countryCodes: [String : String] = ["AD" : "Andorra",
+let countryCodes: [String : String] = [
+    "AD" : "Andorra",
     "AE" : "United Arab Emirates",
     "AF" : "Afghanistan",
     "AG" : "Antigua and Barbuda",

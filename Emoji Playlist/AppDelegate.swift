@@ -12,8 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         return true
@@ -27,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        NSNotificationCenter.defaultCenter().postNotificationName(EIHideAdNotification, object: nil, userInfo: nil)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
