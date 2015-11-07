@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="15A216g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7706"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="350" height="411"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K5v-ot-wfU">
+                    <rect key="frame" x="0.0" y="0.0" width="350" height="20"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.63313698768615723" green="0.26770588755607605" blue="0.29060474038124084" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="yT7-PN-EcU"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="K5v-ot-wfU" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="1c1-go-OHt"/>
+                <constraint firstItem="K5v-ot-wfU" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="e4s-LN-kh0"/>
+                <constraint firstAttribute="trailing" secondItem="K5v-ot-wfU" secondAttribute="trailing" id="k7X-0A-Qob"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="389" y="442.5"/>
+        </view>
+    </objects>
+</document>
