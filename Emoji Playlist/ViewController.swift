@@ -9,8 +9,9 @@
 import UIKit
 import iAd
 
-let EIShowHelpPopupNotification = "com.cal.emojicon.show-help-popup"
-let EIShowKeyboardNotification = "com.cal.emojicon.show-keyboard"
+let ENShowKeyboardNotification = "com.cal.emoji-names.show-keyboard"
+let ENHideAdNotification = "com.cal.emoji-names.hide-ads"
+let ENHasRatedAppKey = "com.cal.emoji-names.has-rated-app"
 
 class ViewController: UIViewController, ADBannerViewDelegate {
     
@@ -25,18 +26,27 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     @IBOutlet weak var emojiLabel: UILabel!
     @IBOutlet weak var emojiNameLabel: UILabel!
     @IBOutlet weak var previousEmojiImage: UIImageView!
+    @IBOutlet weak var previousBackground: UIImageView!
+    var previousEmojiColor = UIColor.clearColor()
+    var emojiCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if is4S() {
+            self.shouldShowAds = false
+            self.adBanner.hidden = true
+            self.emojiNameLabel.font = UIFont.systemFontOfSize(25.0)
+        }
+        
         updateContentHeight(animate: false)
         changeToEmoji("😀", animate: false)
-        emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
+        emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji to see its name"
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardWillChangeFrameNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showHelpPopup:", name: EIShowHelpPopupNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showKeyboard", name: EIShowKeyboardNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showKeyboard", name: ENShowKeyboardNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "hideAd", name: ENHideAdNotification, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransformMakeScale(0.01, 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
@@ -48,6 +58,10 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         }, completion: nil)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.updateContentHeight(animate: false)
+    }
+    
     //MARK: - Showing and Hiding the Keyboard
     
     @IBAction func showKeyboard() { //called from app delegate or UIButton
@@ -55,12 +69,14 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         UIView.animateWithDuration(0.3, animations: {
             self.adBanner.alpha = 1.0
             self.showKeyboardButton.alpha = 1.0
+            self.updateContentHeight()
         })
     }
     
     func hideAd() {
         self.adBanner.alpha = 0.0
         showKeyboardButton.alpha = 0.0
+        self.updateContentHeight(animate: false)
     }
     
     var keyboardHidden = false
@@ -124,9 +140,14 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         let availableHeight = self.view.frame.height - keyboardHeight - (adBannerHidden ? 0 : adBanner.frame.height)
         contentHeight.constant = availableHeight
         
-        UIView.animateWithDuration(animate ? 0.4 : 0.0, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        let animations = { self.view.layoutIfNeeded() }
+        
+        if !animate {
+            animations()
+            return
+        }
+        
+        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
     }
     
     //MARK: - emoji input and processing
@@ -160,6 +181,15 @@ class ViewController: UIViewController, ADBannerViewDelegate {
             }
         }
         
+        if rawEmoji != self.emojiLabel.text {
+            emojiCount++
+            if emojiCount == 50 {
+                delay(1.0) {
+                    self.showRateAlert()
+                }
+            }
+        }
+        
         changeToEmoji(rawEmoji)
     }
     
@@ -180,7 +210,10 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         let style = backgroundLuma > 0.28 ? UIStatusBarStyle.Default : UIStatusBarStyle.LightContent
         UIApplication.sharedApplication().setStatusBarStyle(style, animated: true)
         
-        if animate { animateTransition() }
+        if animate {
+            animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
+        }
+        previousEmojiColor = primaryColor
     }
     
     func nameForEmoji(emoji: String) -> String {
@@ -336,8 +369,10 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         var text = UIColor(hue: hue, saturation: sat, brightness: bright + 0.35, alpha: 1.0)
         let textLuma = colorLuma(text)
         let lumaDiff = abs(textLuma - backgroundLuma)
-        if lumaDiff < 0.05 && textLuma > 0.06 {
+        if lumaDiff < 0.05 && textLuma > 0.1 {
             text = UIColor(hue: hue, saturation: sat, brightness: bright - 0.35, alpha: 1.0)
+        } else if lumaDiff < 0.05 {
+            text = UIColor(hue: hue, saturation: sat - 0.5, brightness: bright + 0.5, alpha: 1.0)
         }
         
         let border = UIColor(hue: hue, saturation: sat, brightness: bright - 0.1, alpha: 1.0)
@@ -347,27 +382,33 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     
     //MARK: - Transition between emoji
     
-    func animateTransition() {
-        let frame = emojiView.frame
-        let diameter = min(frame.size.height, frame.size.width) * 2.0
-        let internalFrame = CGRect(origin: CGPointMake(-self.view.frame.width / 2.0, -self.view.frame.height / 4.0), size: CGSizeMake(diameter, diameter))
+    func animateTransition(usesDifferentColors showCircularMask: Bool) {
         
-        let circle = CALayer()
-        circle.frame = internalFrame
-        circle.cornerRadius = diameter / 2.0
-        circle.backgroundColor = UIColor.blackColor().CGColor
-        
-        emojiView.layer.masksToBounds = true
-        emojiView.layer.mask = circle
-        
-        //animate mask
-        let animation = CABasicAnimation(keyPath: "transform.scale")
-        animation.fromValue = 0.0
-        animation.toValue = 1.0
-        animation.duration = 0.5
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
-        
-        circle.addAnimation(animation, forKey: "scale")
+        if showCircularMask {
+            let frame = emojiView.frame
+            let diameter = min(frame.size.height, frame.size.width) * 2.0
+            
+            let xOffset = -(diameter - frame.width) / 2.0
+            let yOffset = -(diameter - frame.height) / 2.0
+            let internalFrame = CGRect(origin: CGPointMake(xOffset, yOffset), size: CGSizeMake(diameter, diameter))
+            
+            let circle = CALayer()
+            circle.frame = internalFrame
+            circle.cornerRadius = diameter / 2.0
+            circle.backgroundColor = UIColor.blackColor().CGColor
+            
+            emojiView.layer.masksToBounds = true
+            emojiView.layer.mask = circle
+            
+            //animate mask
+            let animation = CABasicAnimation(keyPath: "transform.scale")
+            animation.fromValue = 0.0
+            animation.toValue = 1.0
+            animation.duration = 0.5
+            animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
+            
+            circle.addAnimation(animation, forKey: "scale")
+        }
         
         //animate opacity real fast
         emojiView.alpha = 0.0
@@ -380,20 +421,47 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         emojiNameLabel.alpha = 0.0
         emojiLabel.transform = CGAffineTransformMakeScale(0.01, 0.01)
         emojiLabel.alpha = 0.0
+        previousEmojiImage.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        previousEmojiImage.alpha = 1.0
         
-        UIView.animateWithDuration(0.6, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
+        if !showCircularMask { emojiView.backgroundColor = UIColor.clearColor() }
+        
+        UIView.animateWithDuration(0.7, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
             self.emojiNameLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
             self.emojiNameLabel.alpha = 1.0
             self.emojiLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
             self.emojiLabel.alpha = 1.0
+            self.previousEmojiImage.transform = CGAffineTransformMakeScale(2.0, 2.0)
+            self.previousEmojiImage.alpha = 0.0
         }, completion: nil)
     }
     
     func copyCurrentEmojiToImageView() {
-        UIGraphicsBeginImageContextWithOptions(emojiView.bounds.size, true, 0.0)
+        UIGraphicsBeginImageContextWithOptions(emojiView.bounds.size, false, 0.0)
+        
+        //get picture of just emoji
+        emojiView.backgroundColor = UIColor.clearColor()
+        topBar.hidden = true
+        previousEmojiImage.hidden = true
+        
         emojiView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
         previousEmojiImage.image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        CGContextClearRect(UIGraphicsGetCurrentContext(), emojiView.bounds)
+        emojiView.backgroundColor = self.previousEmojiColor
+        previousEmojiImage.hidden = false
+        
+        //get picture of just background
+        topBar.hidden = false
+        emojiLabel.hidden = true
+        emojiNameLabel.hidden = true
+        
+        emojiView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        previousBackground.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+        
+        emojiLabel.hidden = false
+        emojiNameLabel.hidden = false
     }
     
     //MARK: - ad delegate
@@ -401,7 +469,7 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     @IBOutlet weak var adBanner: ADBannerView!
     @IBOutlet weak var adPosition: NSLayoutConstraint!
     var keyboardHeight : CGFloat = 0
-    var shouldShowAds = false
+    var shouldShowAds = true
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
@@ -428,21 +496,67 @@ class ViewController: UIViewController, ADBannerViewDelegate {
                 self.updateContentHeight()
         })
     }
-    
-    func keyboardHidden(hidden: Bool) {
-        adPosition.constant = (hidden ? -adBanner.frame.height : keyboardHeight)
-        UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: nil)
-    }
-    
     func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
-        self.keyboardHidden(true)
         return true
     }
     
     func bannerViewActionDidFinish(banner: ADBannerView!) {
-        self.adPosition.constant = -banner.frame.height
-        self.view.layoutIfNeeded()
-        self.hiddenField.becomeFirstResponder()
+        delay(0.01) {
+            self.hiddenField.becomeFirstResponder()
+        }
     }
 
+    //MARK: - Self Promotion
+    
+    func showRateAlert() {
+        let data = NSUserDefaults.standardUserDefaults()
+        if data.boolForKey(ENHasRatedAppKey) { return }
+        
+        self.previousBackground.image = nil
+        self.showKeyboardButton.hidden = true
+        
+        let alert = UIAlertController(title: "Rate Emoji Names?", message: "It looks like you're enjoying Emoji Names so far! Would you mind giving it a rating in the App Store so other people can hear how awesome it is?", preferredStyle: .Alert)
+        
+        alert.addAction(UIAlertAction(title: "No Thanks", style: .Destructive, handler: { _ in
+            delay(0.5) { self.showKeyboardButton.hidden = false }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Sure!", style: .Default, handler: { _ in
+            data.setBool(true, forKey: ENHasRatedAppKey)
+            let URL = NSURL(string: "itms://itunes.apple.com/us/app/emoji-names/id1060405457?ls=1&mt=8")
+            UIApplication.sharedApplication().openURL(URL!)
+            self.showKeyboardButton.hidden = false
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+}
+
+extension UIColor {
+    
+    func approxEquals(other: UIColor, within: CGFloat = 0.025) -> Bool {
+        var thisRed: CGFloat = 0.0
+        var thisGreen: CGFloat = 0.0
+        var thisBlue: CGFloat = 0.0
+        var thisAlpha: CGFloat = 0.0
+        self.getRed(&thisRed, green: &thisGreen, blue: &thisBlue, alpha: &thisAlpha)
+        
+        var otherRed: CGFloat = 0.0
+        var otherGreen: CGFloat = 0.0
+        var otherBlue: CGFloat = 0.0
+        var otherAlpha: CGFloat = 0.0
+        other.getRed(&otherRed, green: &otherGreen, blue: &otherBlue, alpha: &otherAlpha)
+        
+        let diffRed = abs(thisRed - otherRed)
+        let diffBlue = abs(thisBlue - otherBlue)
+        let diffGreen = abs(thisGreen - otherGreen)
+        let diffAlpha = abs(thisAlpha - otherAlpha)
+        return diffRed < within && diffBlue < within && diffGreen < within && diffAlpha < within
+    }
+    
+}
+
+func is4S() -> Bool {
+    return UIScreen.mainScreen().bounds.height == 480.0
 }

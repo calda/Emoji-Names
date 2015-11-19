@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -66,6 +66,10 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="fGr-O4-uxB"/>
                                 </connections>
                             </adBannerView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OXI-VM-fJu" userLabel="previousBackground">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="350"/>
+                                <animations/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zyQ-Gh-9uO" userLabel="previousEmoji">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="350"/>
                                 <animations/>
@@ -206,6 +210,8 @@
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="centerY" secondItem="Sht-Ij-rVi" secondAttribute="centerY" id="PIT-OT-tAG"/>
                             <constraint firstItem="eMG-TM-eUO" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="-30" id="RpU-aV-yKw"/>
                             <constraint firstItem="eMG-TM-eUO" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="SVU-jh-PiX"/>
+                            <constraint firstItem="OXI-VM-fJu" firstAttribute="centerY" secondItem="zyQ-Gh-9uO" secondAttribute="centerY" id="THE-PF-3B1"/>
+                            <constraint firstItem="OXI-VM-fJu" firstAttribute="width" secondItem="zyQ-Gh-9uO" secondAttribute="width" id="UWK-cg-sM2"/>
                             <constraint firstAttribute="trailing" secondItem="Sht-Ij-rVi" secondAttribute="trailing" id="Xtg-I3-skZ"/>
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="height" secondItem="Sht-Ij-rVi" secondAttribute="height" id="awr-MY-0x3"/>
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="width" secondItem="Sht-Ij-rVi" secondAttribute="width" id="fqf-h3-hHJ"/>
@@ -213,8 +219,10 @@
                             <constraint firstItem="sLf-2O-1Vc" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="iJI-6l-VoG"/>
                             <constraint firstAttribute="trailing" secondItem="sLf-2O-1Vc" secondAttribute="trailing" id="j68-Bn-jZL"/>
                             <constraint firstItem="eLD-Gc-KT4" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="kx0-Rl-NMb"/>
+                            <constraint firstItem="OXI-VM-fJu" firstAttribute="height" secondItem="zyQ-Gh-9uO" secondAttribute="height" id="p7b-F8-0cl"/>
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="centerX" secondItem="Sht-Ij-rVi" secondAttribute="centerX" id="qbM-rd-wQs"/>
                             <constraint firstItem="eLD-Gc-KT4" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" constant="-150" id="yGQ-KZ-D5l"/>
+                            <constraint firstItem="OXI-VM-fJu" firstAttribute="centerX" secondItem="zyQ-Gh-9uO" secondAttribute="centerX" id="yic-t1-7og"/>
                             <constraint firstItem="Sht-Ij-rVi" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="zIb-cR-ela"/>
                         </constraints>
                         <variation key="default">
@@ -234,6 +242,7 @@
                         <outlet property="hiddenField" destination="eMG-TM-eUO" id="fhu-0f-d3g"/>
                         <outlet property="openKeyboardPosition" destination="yGQ-KZ-D5l" id="lU2-5O-AXe"/>
                         <outlet property="openKeyboardView" destination="eLD-Gc-KT4" id="Ul8-Dm-6LR"/>
+                        <outlet property="previousBackground" destination="OXI-VM-fJu" id="LPF-Y8-mYQ"/>
                         <outlet property="previousEmojiImage" destination="zyQ-Gh-9uO" id="Ovv-0d-jZz"/>
                         <outlet property="showKeyboardButton" destination="NPw-A8-Ubs" id="1JN-SM-ywm"/>
                         <outlet property="topBar" destination="6EN-PL-Ln6" id="wJW-6j-WUo"/>
