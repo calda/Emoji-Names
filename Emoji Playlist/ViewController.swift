@@ -33,6 +33,7 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        shouldShowAds = false
         if is4S() {
             self.shouldShowAds = false
             self.adBanner.hidden = true
@@ -41,7 +42,7 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         
         updateContentHeight(animate: false)
         changeToEmoji("😀", animate: false)
-        emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji to see its name"
+        emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardWillChangeFrameNotification, object: nil)
