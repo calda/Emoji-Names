@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2E0BBC331B38A43200513D11 /* CountryCodeLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */; };
-		2EFE4B101B361F2D00AFA27A /* Plus Math-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE4B0F1B361F2D00AFA27A /* Plus Math-100.png */; };
-		2EFE4B121B361F3000AFA27A /* Minus Math-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE4B111B361F3000AFA27A /* Minus Math-100.png */; };
-		2EFE4B161B3622D400AFA27A /* Delete Sign-100(1).png in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE4B151B3622D400AFA27A /* Delete Sign-100(1).png */; };
-		443D92001AF14DBE00EFDD3A /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443D91FF1AF14DBE00EFDD3A /* iAd.framework */; };
-		44C877711AFA893B00EB5BC1 /* iphone cutout.png in Resources */ = {isa = PBXBuildFile; fileRef = 44C877701AFA893B00EB5BC1 /* iphone cutout.png */; };
 		44F46F731ADD3DEB00F46BA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */; };
 		44F46F751ADD3DEB00F46BA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F741ADD3DEB00F46BA2 /* ViewController.swift */; };
 		44F46F781ADD3DEB00F46BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F46F761ADD3DEB00F46BA2 /* Main.storyboard */; };
@@ -22,11 +17,6 @@
 
 /* Begin PBXFileReference section */
 		2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodeLookup.swift; sourceTree = "<group>"; };
-		2EFE4B0F1B361F2D00AFA27A /* Plus Math-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Plus Math-100.png"; sourceTree = "<group>"; };
-		2EFE4B111B361F3000AFA27A /* Minus Math-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Minus Math-100.png"; sourceTree = "<group>"; };
-		2EFE4B151B3622D400AFA27A /* Delete Sign-100(1).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Delete Sign-100(1).png"; sourceTree = "<group>"; };
-		443D91FF1AF14DBE00EFDD3A /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
-		44C877701AFA893B00EB5BC1 /* iphone cutout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone cutout.png"; sourceTree = "<group>"; };
 		44F46F6D1ADD3DEB00F46BA2 /* Emoji Names.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Emoji Names.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F46F711ADD3DEB00F46BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -41,7 +31,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				443D92001AF14DBE00EFDD3A /* iAd.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,7 +40,6 @@
 		44F46F641ADD3DEB00F46BA2 = {
 			isa = PBXGroup;
 			children = (
-				443D91FF1AF14DBE00EFDD3A /* iAd.framework */,
 				44F46F6F1ADD3DEB00F46BA2 /* Emoji Playlist */,
 				44F46F6E1ADD3DEB00F46BA2 /* Products */,
 			);
@@ -83,10 +71,6 @@
 			children = (
 				2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */,
 				44F46F711ADD3DEB00F46BA2 /* Info.plist */,
-				44C877701AFA893B00EB5BC1 /* iphone cutout.png */,
-				2EFE4B0F1B361F2D00AFA27A /* Plus Math-100.png */,
-				2EFE4B111B361F3000AFA27A /* Minus Math-100.png */,
-				2EFE4B151B3622D400AFA27A /* Delete Sign-100(1).png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -156,11 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFE4B121B361F3000AFA27A /* Minus Math-100.png in Resources */,
 				44F46F781ADD3DEB00F46BA2 /* Main.storyboard in Resources */,
-				44C877711AFA893B00EB5BC1 /* iphone cutout.png in Resources */,
-				2EFE4B161B3622D400AFA27A /* Delete Sign-100(1).png in Resources */,
-				2EFE4B101B361F2D00AFA27A /* Plus Math-100.png in Resources */,
 				44F46F7D1ADD3DEB00F46BA2 /* LaunchScreen.xib in Resources */,
 				44F46F7A1ADD3DEB00F46BA2 /* Images.xcassets in Resources */,
 			);

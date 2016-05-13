@@ -91,6 +91,12 @@
       "idiom" : "ipad",
       "filename" : "icon 152.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "ipad pro.png",
+      "scale" : "2x"
     }
   ],
   "info" : {

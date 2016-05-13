@@ -7,13 +7,11 @@
 //
 
 import UIKit
-import iAd
 
 let ENShowKeyboardNotification = "com.cal.emoji-names.show-keyboard"
-let ENHideAdNotification = "com.cal.emoji-names.hide-ads"
 let ENHasRatedAppKey = "com.cal.emoji-names.has-rated-app"
 
-class ViewController: UIViewController, ADBannerViewDelegate {
+class ViewController: UIViewController {
     
     @IBOutlet weak var hiddenField: UITextField!
     @IBOutlet weak var showKeyboardButton: UIButton!
@@ -29,14 +27,12 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     @IBOutlet weak var previousBackground: UIImageView!
     var previousEmojiColor = UIColor.clearColor()
     var emojiCount = 0
+    var keyboardHeight : CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        shouldShowAds = false
         if is4S() {
-            self.shouldShowAds = false
-            self.adBanner.hidden = true
             self.emojiNameLabel.font = UIFont.systemFontOfSize(25.0)
         }
         
@@ -44,10 +40,9 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         changeToEmoji("😀", animate: false)
         emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChanged:", name: UIKeyboardWillChangeFrameNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showKeyboard", name: ENShowKeyboardNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "hideAd", name: ENHideAdNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.showKeyboard), name: ENShowKeyboardNotification, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransformMakeScale(0.01, 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
@@ -68,16 +63,9 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     @IBAction func showKeyboard() { //called from app delegate or UIButton
         hiddenField.becomeFirstResponder()
         UIView.animateWithDuration(0.3, animations: {
-            self.adBanner.alpha = 1.0
             self.showKeyboardButton.alpha = 1.0
             self.updateContentHeight()
         })
-    }
-    
-    func hideAd() {
-        self.adBanner.alpha = 0.0
-        showKeyboardButton.alpha = 0.0
-        self.updateContentHeight(animate: false)
     }
     
     var keyboardHidden = false
@@ -92,14 +80,6 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         
         let duration = "\(info[UIKeyboardAnimationDurationUserInfoKey]!)"
         updateContentHeight(animate: duration != "0")
-        
-        if !adBanner.bannerLoaded {
-            //ad is not on screen
-            keyboardHidden = false
-            return
-        }
-        
-        adPosition.constant = keyboardHeight
         
         if keyboardHidden {
             UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: nil)
@@ -137,8 +117,7 @@ class ViewController: UIViewController, ADBannerViewDelegate {
     }
     
     func updateContentHeight(animate animate: Bool = true) {
-        let adBannerHidden = adPosition.constant == -adBanner.frame.height || !shouldShowAds || adBanner.hidden || adBanner.alpha == 0.0
-        let availableHeight = self.view.frame.height - keyboardHeight - (adBannerHidden ? 0 : adBanner.frame.height)
+        let availableHeight = self.view.frame.height - keyboardHeight
         contentHeight.constant = availableHeight
         
         let animations = { self.view.layoutIfNeeded() }
@@ -183,8 +162,8 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         }
         
         if rawEmoji != self.emojiLabel.text {
-            emojiCount++
-            if emojiCount == 50 {
+            emojiCount += 1
+            if emojiCount == 25 {
                 delay(1.0) {
                     self.showRateAlert()
                 }
@@ -463,48 +442,6 @@ class ViewController: UIViewController, ADBannerViewDelegate {
         
         emojiLabel.hidden = false
         emojiNameLabel.hidden = false
-    }
-    
-    //MARK: - ad delegate
-    
-    @IBOutlet weak var adBanner: ADBannerView!
-    @IBOutlet weak var adPosition: NSLayoutConstraint!
-    var keyboardHeight : CGFloat = 0
-    var shouldShowAds = true
-    
-    func bannerViewDidLoadAd(banner: ADBannerView!) {
-        
-        if (!shouldShowAds) {
-            self.updateContentHeight()
-            adBanner.hidden = true
-            return
-        }
-        
-        if adPosition.constant != keyboardHeight {
-            adPosition.constant = keyboardHeight
-            UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: { success in
-                    self.updateContentHeight()
-            })
-        }
-        
-    }
-    
-    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        adPosition.constant = -banner.frame.height
-        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: { success in
-                self.updateContentHeight()
-        })
-    }
-    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
-        return true
-    }
-    
-    func bannerViewActionDidFinish(banner: ADBannerView!) {
-        delay(0.01) {
-            self.hiddenField.becomeFirstResponder()
-        }
     }
 
     //MARK: - Self Promotion
