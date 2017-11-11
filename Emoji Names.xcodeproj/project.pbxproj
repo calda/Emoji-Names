@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2E0BBC331B38A43200513D11 /* CountryCodeLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */; };
+		2E2D87A81FB6A7E100D86B91 /* String+Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */; };
+		2E2D87AA1FB6AA4700D86B91 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */; };
 		44F46F731ADD3DEB00F46BA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */; };
 		44F46F751ADD3DEB00F46BA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F741ADD3DEB00F46BA2 /* ViewController.swift */; };
 		44F46F781ADD3DEB00F46BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F46F761ADD3DEB00F46BA2 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodeLookup.swift; sourceTree = "<group>"; };
+		2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Emoji.swift"; sourceTree = "<group>"; };
+		2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
 		44F46F6D1ADD3DEB00F46BA2 /* Emoji Names.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Emoji Names.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F46F711ADD3DEB00F46BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +62,8 @@
 			children = (
 				44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */,
 				44F46F741ADD3DEB00F46BA2 /* ViewController.swift */,
+				2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */,
+				2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */,
 				44F46F761ADD3DEB00F46BA2 /* Main.storyboard */,
 				44F46F791ADD3DEB00F46BA2 /* Images.xcassets */,
 				44F46F7B1ADD3DEB00F46BA2 /* LaunchScreen.xib */,
@@ -156,7 +162,9 @@
 			files = (
 				2E0BBC331B38A43200513D11 /* CountryCodeLookup.swift in Sources */,
 				44F46F751ADD3DEB00F46BA2 /* ViewController.swift in Sources */,
+				2E2D87AA1FB6AA4700D86B91 /* UIImage+Color.swift in Sources */,
 				44F46F731ADD3DEB00F46BA2 /* AppDelegate.swift in Sources */,
+				2E2D87A81FB6A7E100D86B91 /* String+Emoji.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
