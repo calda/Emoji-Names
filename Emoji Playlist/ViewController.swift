@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var emojiNameLabel: UILabel!
     @IBOutlet weak var previousEmojiImage: UIImageView!
     @IBOutlet weak var previousBackground: UIImageView!
-    var previousEmojiColor = UIColor.clearColor()
+    var previousEmojiColor = UIColor.clear
     var emojiCount = 0
     var keyboardHeight : CGFloat = 0
     
@@ -33,28 +33,28 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         if is4S() {
-            self.emojiNameLabel.font = UIFont.systemFontOfSize(25.0)
+            self.emojiNameLabel.font = UIFont.systemFont(ofSize: 25.0)
         }
         
         updateContentHeight(animate: false)
         changeToEmoji("😀", animate: false)
         emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.showKeyboard), name: ENShowKeyboardNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.showKeyboard), name: NSNotification.Name(rawValue: ENShowKeyboardNotification), object: nil)
         
-        self.openKeyboardView.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        self.openKeyboardView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
         self.openKeyboardView.layer.masksToBounds = true
         
         showKeyboardButton.alpha = 0.0
-        UIView.animateWithDuration(0.5, delay: 1.0, options: [], animations: {
+        UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
             self.showKeyboardButton.alpha = 1.0
         }, completion: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.updateContentHeight(animate: false)
     }
     
@@ -62,7 +62,7 @@ class ViewController: UIViewController {
     
     @IBAction func showKeyboard() { //called from app delegate or UIButton
         hiddenField.becomeFirstResponder()
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.showKeyboardButton.alpha = 1.0
             self.updateContentHeight()
         })
@@ -70,19 +70,19 @@ class ViewController: UIViewController {
     
     var keyboardHidden = false
     
-    func keyboardChanged(notification: NSNotification) {
+    func keyboardChanged(_ notification: Notification) {
         let info = notification.userInfo!
-        let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]!
+        let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]! as AnyObject
         
-        let rawFrame = value.CGRectValue
-        let keyboardFrame = view.convertRect(rawFrame, fromView: nil)
+        let rawFrame = value.cgRectValue
+        let keyboardFrame = view.convert(rawFrame!, from: nil)
         self.keyboardHeight = keyboardFrame.height
         
         let duration = "\(info[UIKeyboardAnimationDurationUserInfoKey]!)"
         updateContentHeight(animate: duration != "0")
         
         if keyboardHidden {
-            UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: nil)
+            UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: { self.view.layoutIfNeeded() }, completion: nil)
         } else {
             self.view.layoutIfNeeded()
         }
@@ -91,8 +91,8 @@ class ViewController: UIViewController {
         
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
 
     var isAnimatingPopup = false
@@ -103,12 +103,12 @@ class ViewController: UIViewController {
         isAnimatingPopup = true
         self.openKeyboardView.alpha = 1.0
         
-        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: [], animations: {
-            self.openKeyboardView.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: [], animations: {
+            self.openKeyboardView.transform = CGAffineTransform.identity
         }, completion: nil)
         
-        UIView.animateWithDuration(0.4, delay: 2.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
-            self.openKeyboardView.transform = CGAffineTransformMakeScale(0.0001, 0.0001)
+        UIView.animate(withDuration: 0.4, delay: 2.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+            self.openKeyboardView.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
         }, completion: { _ in
             self.isAnimatingPopup = false
             self.openKeyboardView.alpha = 0.0
@@ -116,7 +116,7 @@ class ViewController: UIViewController {
         
     }
     
-    func updateContentHeight(animate animate: Bool = true) {
+    func updateContentHeight(animate: Bool = true) {
         let availableHeight = self.view.frame.height - keyboardHeight
         contentHeight.constant = availableHeight
         
@@ -127,12 +127,12 @@ class ViewController: UIViewController {
             return
         }
         
-        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
     }
     
     //MARK: - emoji input and processing
     
-    @IBAction func hiddenInputReceived(sender: UITextField, forEvent event: UIEvent) {
+    @IBAction func hiddenInputReceived(_ sender: UITextField, forEvent event: UIEvent) {
         let rawEmoji = sender.text!
         sender.text = nil
         
@@ -140,8 +140,8 @@ class ViewController: UIViewController {
         var emoji = rawEmoji as NSString
         
         let notEmoji = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+,./;'[]\\<>?:\"{}| "
-        for character in rawEmoji.characters {
-            if notEmoji.containsString("\(character)".lowercaseString) {
+        for character in rawEmoji {
+            if notEmoji.contains("\(character)".lowercased()) {
                 sender.text = ""
                 //show an alert
                 showOpenKeyboardPopup()
@@ -150,14 +150,14 @@ class ViewController: UIViewController {
         }
         
         if emoji.length > 1 {
-            let char2 = emoji.characterAtIndex(1)
+            let char2 = emoji.character(at: 1)
             if char2 >= 57339 && char2 <= 57343
             { //is skin tone marker
-                emoji = sender.text!.substringFromIndex(sender.text!.endIndex.predecessor().predecessor()) as NSString
+                emoji = (rawEmoji as NSString).substring(from: rawEmoji.count - 2) as NSString
             }
             
             if emoji.length % 4 == 0 && emoji.length > 4 { //flags stick together for some reason?
-                emoji = emoji.substringFromIndex(emoji.length - 4)
+                emoji = emoji.substring(from: emoji.length - 4) as NSString
             }
         }
         
@@ -173,7 +173,7 @@ class ViewController: UIViewController {
         changeToEmoji(rawEmoji)
     }
     
-    func changeToEmoji(emoji: String, animate: Bool = true) {
+    func changeToEmoji(_ emoji: String, animate: Bool = true) {
         copyCurrentEmojiToImageView()
         
         emojiLabel.text = emoji
@@ -187,8 +187,8 @@ class ViewController: UIViewController {
         self.view.backgroundColor = primaryColor
         
         let backgroundLuma = colorLuma(border)
-        let style = backgroundLuma > 0.28 ? UIStatusBarStyle.Default : UIStatusBarStyle.LightContent
-        UIApplication.sharedApplication().setStatusBarStyle(style, animated: true)
+        let style = backgroundLuma > 0.28 ? UIStatusBarStyle.default : UIStatusBarStyle.lightContent
+        UIApplication.shared.setStatusBarStyle(style, animated: true)
         
         if animate {
             animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
@@ -196,7 +196,7 @@ class ViewController: UIViewController {
         previousEmojiColor = primaryColor
     }
     
-    func nameForEmoji(emoji: String) -> String {
+    func nameForEmoji(_ emoji: String) -> String {
             
         let cfstring = NSMutableString(string: emoji) as CFMutableString
         var range = CFRangeMake(0, CFStringGetLength(cfstring))
@@ -204,17 +204,17 @@ class ViewController: UIViewController {
         let capitalName = "\(cfstring)"
         
         if !capitalName.hasPrefix("\\") { //is number emoji
-            var splits = capitalName.componentsSeparatedByString("\\")
+            var splits = capitalName.components(separatedBy: "\\")
             return ((capitalName as NSString).length > 1 ? "keycap " : "") + splits[0]
         }
             
         else {
-            var splits = capitalName.componentsSeparatedByString("}")
+            var splits = capitalName.components(separatedBy: "}")
             if splits.last == "" { splits.removeLast() }
             
             for i in 0 ..< splits.count {
                 if (splits[i] as NSString).length > 3 {
-                    splits[i] = (splits[i] as NSString).substringFromIndex(3).lowercaseString
+                    splits[i] = (splits[i] as NSString).substring(from: 3).lowercased()
                 }
             }
             
@@ -229,8 +229,8 @@ class ViewController: UIViewController {
                 else { //flags are awful
                     var flagName = ""
                     for split in splits {
-                        let splitNS = split.uppercaseString as NSString
-                        flagName += splitNS.substringFromIndex(splitNS.length - 1)
+                        let splitNS = split.uppercased() as NSString
+                        flagName += splitNS.substring(from: splitNS.length - 1)
                     }
                     
                     if let countryName = countryNameForCode(flagName){
@@ -247,41 +247,41 @@ class ViewController: UIViewController {
         return "family" //can only be family as far as I know
     }
     
-    func imageForEmoji(emojiString: String) -> UIImage {
-        let size = CGRectMake(0.0, 0.0, 100.0, 100.0)
+    func imageForEmoji(_ emojiString: String) -> UIImage {
+        let size = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
         UIGraphicsBeginImageContext(size.size)
         let context = UIGraphicsGetCurrentContext()
         
-        CGContextSetFillColorWithColor(context, UIColor.whiteColor().CGColor)
-        CGContextFillRect(context, size)
-        CGContextSetAllowsAntialiasing(context, true)
-        CGContextSetShouldAntialias(context, true)
+        context?.setFillColor(UIColor.white.cgColor)
+        context?.fill(size)
+        context?.setAllowsAntialiasing(true)
+        context?.setShouldAntialias(true)
         
         let emoji = emojiString as NSString
-        let font = UIFont.systemFontOfSize(75.0)
+        let font = UIFont.systemFont(ofSize: 75.0)
         let attributes = [NSFontAttributeName : font as AnyObject]
-        let drawSize = emoji.boundingRectWithSize(size.size, options: .UsesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
+        let drawSize = emoji.boundingRect(with: size.size, options: .usesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
         
         let xOffset = (size.width - drawSize.width) / 2
         let yOffset = (size.height - drawSize.height) / 2
-        let drawPoint = CGPointMake(xOffset, yOffset)
+        let drawPoint = CGPoint(x: xOffset, y: yOffset)
         let drawRect = CGRect(origin: drawPoint, size: drawSize)
-        emoji.drawInRect(CGRectIntegral(drawRect), withAttributes: attributes)
+        emoji.draw(in: drawRect.integral, withAttributes: attributes)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return image
+        return image!
     }
     
-    func colorForImage(uiimage: UIImage) -> UIColor {
+    func colorForImage(_ uiimage: UIImage) -> UIColor {
         
-        guard let image = uiimage.CGImage else { return UIColor.whiteColor() }
-        let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
+        guard let image = uiimage.cgImage else { return UIColor.white }
+        let pixelData = image.dataProvider?.data
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
         
         typealias Pixel = (red: Int, green: Int, blue: Int)
-        func pixelAtPoint(x: Int, _ y: Int) -> Pixel {
+        func pixelAtPoint(_ x: Int, _ y: Int) -> Pixel {
             let pixelIndex = ((Int(uiimage.size.width) * y) + x) * 4
             let b = Int(data[pixelIndex])
             let g = Int(data[pixelIndex + 1])
@@ -289,7 +289,7 @@ class ViewController: UIViewController {
             return (r, g, b)
         }
         
-        func clampInt(int: Int, onInterval interval: Int) -> Int {
+        func clampInt(_ int: Int, onInterval interval: Int) -> Int {
             return Int(int / interval) * interval
         }
         
@@ -317,7 +317,7 @@ class ViewController: UIViewController {
                 currentCount += 1
                 countMap.updateValue((pixel, currentCount), forKey: key)
                 
-                if currentCount > maximum?.count {
+                if currentCount > (maximum?.count ?? 0) {
                     maximum = (pixel, currentCount)
                 }
             }
@@ -327,7 +327,7 @@ class ViewController: UIViewController {
         return UIColor(red: CGFloat(color.red) / 255.0, green: CGFloat(color.green) / 255.0, blue: CGFloat(color.blue) / 255.0, alpha: 1.0)
     }
     
-    func colorLuma(color: UIColor) -> CGFloat{
+    func colorLuma(_ color: UIColor) -> CGFloat{
         var r : CGFloat  = 0.0
         var g : CGFloat  = 0.0
         var b : CGFloat  = 0.0
@@ -338,7 +338,7 @@ class ViewController: UIViewController {
         return (lumaR + lumaG + lumaB) / 3
     }
     
-    func secondaryColorsForBackground(background: UIColor) -> (text: UIColor, border: UIColor) {
+    func secondaryColorsForBackground(_ background: UIColor) -> (text: UIColor, border: UIColor) {
         
         var hue : CGFloat  = 0.0
         var sat : CGFloat  = 0.0
@@ -370,12 +370,12 @@ class ViewController: UIViewController {
             
             let xOffset = -(diameter - frame.width) / 2.0
             let yOffset = -(diameter - frame.height) / 2.0
-            let internalFrame = CGRect(origin: CGPointMake(xOffset, yOffset), size: CGSizeMake(diameter, diameter))
+            let internalFrame = CGRect(origin: CGPoint(x: xOffset, y: yOffset), size: CGSize(width: diameter, height: diameter))
             
             let circle = CALayer()
             circle.frame = internalFrame
             circle.cornerRadius = diameter / 2.0
-            circle.backgroundColor = UIColor.blackColor().CGColor
+            circle.backgroundColor = UIColor.black.cgColor
             
             emojiView.layer.masksToBounds = true
             emojiView.layer.mask = circle
@@ -387,31 +387,31 @@ class ViewController: UIViewController {
             animation.duration = 0.5
             animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
             
-            circle.addAnimation(animation, forKey: "scale")
+            circle.add(animation, forKey: "scale")
         }
         
         //animate opacity real fast
         emojiView.alpha = 0.0
-        UIView.animateWithDuration(0.15, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+        UIView.animate(withDuration: 0.15, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
             self.emojiView.alpha = 1.0
         }, completion: nil)
         
         //animate scale
-        emojiNameLabel.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        emojiNameLabel.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         emojiNameLabel.alpha = 0.0
-        emojiLabel.transform = CGAffineTransformMakeScale(0.01, 0.01)
+        emojiLabel.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         emojiLabel.alpha = 0.0
-        previousEmojiImage.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        previousEmojiImage.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         previousEmojiImage.alpha = 1.0
         
-        if !showCircularMask { emojiView.backgroundColor = UIColor.clearColor() }
+        if !showCircularMask { emojiView.backgroundColor = UIColor.clear }
         
-        UIView.animateWithDuration(0.7, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
-            self.emojiNameLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        UIView.animate(withDuration: 0.7, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
+            self.emojiNameLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             self.emojiNameLabel.alpha = 1.0
-            self.emojiLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.emojiLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             self.emojiLabel.alpha = 1.0
-            self.previousEmojiImage.transform = CGAffineTransformMakeScale(2.0, 2.0)
+            self.previousEmojiImage.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
             self.previousEmojiImage.alpha = 0.0
         }, completion: nil)
     }
@@ -420,60 +420,60 @@ class ViewController: UIViewController {
         UIGraphicsBeginImageContextWithOptions(emojiView.bounds.size, false, 0.0)
         
         //get picture of just emoji
-        emojiView.backgroundColor = UIColor.clearColor()
-        topBar.hidden = true
-        previousEmojiImage.hidden = true
+        emojiView.backgroundColor = UIColor.clear
+        topBar.isHidden = true
+        previousEmojiImage.isHidden = true
         
-        emojiView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        emojiView.layer.render(in: UIGraphicsGetCurrentContext()!)
         previousEmojiImage.image = UIGraphicsGetImageFromCurrentImageContext()
         
-        CGContextClearRect(UIGraphicsGetCurrentContext(), emojiView.bounds)
+        UIGraphicsGetCurrentContext()?.clear(emojiView.bounds)
         emojiView.backgroundColor = self.previousEmojiColor
-        previousEmojiImage.hidden = false
+        previousEmojiImage.isHidden = false
         
         //get picture of just background
-        topBar.hidden = false
-        emojiLabel.hidden = true
-        emojiNameLabel.hidden = true
+        topBar.isHidden = false
+        emojiLabel.isHidden = true
+        emojiNameLabel.isHidden = true
         
-        emojiView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        emojiView.layer.render(in: UIGraphicsGetCurrentContext()!)
         previousBackground.image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        emojiLabel.hidden = false
-        emojiNameLabel.hidden = false
+        emojiLabel.isHidden = false
+        emojiNameLabel.isHidden = false
     }
 
     //MARK: - Self Promotion
     
     func showRateAlert() {
-        let data = NSUserDefaults.standardUserDefaults()
-        if data.boolForKey(ENHasRatedAppKey) { return }
+        let data = UserDefaults.standard
+        if data.bool(forKey: ENHasRatedAppKey) { return }
         
         self.previousBackground.image = nil
-        self.showKeyboardButton.hidden = true
+        self.showKeyboardButton.isHidden = true
         
-        let alert = UIAlertController(title: "Rate Emoji Names?", message: "It looks like you're enjoying Emoji Names so far! Would you mind giving it a rating in the App Store so other people can hear how awesome it is?", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Rate Emoji Names?", message: "It looks like you're enjoying Emoji Names so far! Would you mind giving it a rating in the App Store so other people can hear how awesome it is?", preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "No Thanks", style: .Destructive, handler: { _ in
-            delay(0.5) { self.showKeyboardButton.hidden = false }
+        alert.addAction(UIAlertAction(title: "No Thanks", style: .destructive, handler: { _ in
+            delay(0.5) { self.showKeyboardButton.isHidden = false }
         }))
         
-        alert.addAction(UIAlertAction(title: "Sure!", style: .Default, handler: { _ in
-            data.setBool(true, forKey: ENHasRatedAppKey)
-            let URL = NSURL(string: "itms://itunes.apple.com/us/app/emoji-names/id1060405457?ls=1&mt=8")
-            UIApplication.sharedApplication().openURL(URL!)
-            self.showKeyboardButton.hidden = false
+        alert.addAction(UIAlertAction(title: "Sure!", style: .default, handler: { _ in
+            data.set(true, forKey: ENHasRatedAppKey)
+            let URL = Foundation.URL(string: "itms://itunes.apple.com/us/app/emoji-names/id1060405457?ls=1&mt=8")
+            UIApplication.shared.openURL(URL!)
+            self.showKeyboardButton.isHidden = false
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
 }
 
 extension UIColor {
     
-    func approxEquals(other: UIColor, within: CGFloat = 0.025) -> Bool {
+    func approxEquals(_ other: UIColor, within: CGFloat = 0.025) -> Bool {
         var thisRed: CGFloat = 0.0
         var thisGreen: CGFloat = 0.0
         var thisBlue: CGFloat = 0.0
@@ -496,5 +496,5 @@ extension UIColor {
 }
 
 func is4S() -> Bool {
-    return UIScreen.mainScreen().bounds.height == 480.0
+    return UIScreen.main.bounds.height == 480.0
 }

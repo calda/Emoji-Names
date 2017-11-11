@@ -109,6 +109,7 @@
 					44F46F6C1ADD3DEB00F46BA2 = {
 						CreatedOnToolsVersion = 6.2;
 						DevelopmentTeam = FZ89A5SZ7C;
+						LastSwiftMigration = 0830;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 0;
@@ -271,6 +272,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.cal.emoji-names";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -287,6 +289,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.cal.emoji-names";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

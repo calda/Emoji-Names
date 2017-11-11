@@ -8,7 +8,7 @@
 
 import Foundation
 
-func countryNameForCode(code: String) -> String? {
+func countryNameForCode(_ code: String) -> String? {
     return countryCodes[code]
 }
 
