@@ -10,6 +10,8 @@
 		2E0BBC331B38A43200513D11 /* CountryCodeLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */; };
 		2E2D87A81FB6A7E100D86B91 /* String+Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */; };
 		2E2D87AA1FB6AA4700D86B91 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */; };
+		2E9334051FB6BE0200E8D299 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E9334031FB6BE0200E8D299 /* Fabric.framework */; };
+		2E9334061FB6BE0200E8D299 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E9334041FB6BE0200E8D299 /* Crashlytics.framework */; };
 		44F46F731ADD3DEB00F46BA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */; };
 		44F46F751ADD3DEB00F46BA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F46F741ADD3DEB00F46BA2 /* ViewController.swift */; };
 		44F46F781ADD3DEB00F46BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F46F761ADD3DEB00F46BA2 /* Main.storyboard */; };
@@ -21,6 +23,8 @@
 		2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodeLookup.swift; sourceTree = "<group>"; };
 		2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Emoji.swift"; sourceTree = "<group>"; };
 		2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
+		2E9334031FB6BE0200E8D299 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
+		2E9334041FB6BE0200E8D299 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		44F46F6D1ADD3DEB00F46BA2 /* Emoji Names.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Emoji Names.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F46F711ADD3DEB00F46BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44F46F721ADD3DEB00F46BA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +39,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E9334061FB6BE0200E8D299 /* Crashlytics.framework in Frameworks */,
+				2E9334051FB6BE0200E8D299 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +75,8 @@
 				44F46F791ADD3DEB00F46BA2 /* Images.xcassets */,
 				44F46F7B1ADD3DEB00F46BA2 /* LaunchScreen.xib */,
 				44F46F701ADD3DEB00F46BA2 /* Supporting Files */,
+				2E9334041FB6BE0200E8D299 /* Crashlytics.framework */,
+				2E9334031FB6BE0200E8D299 /* Fabric.framework */,
 			);
 			path = "Emoji Playlist";
 			sourceTree = "<group>";
@@ -91,6 +99,7 @@
 				44F46F691ADD3DEB00F46BA2 /* Sources */,
 				44F46F6A1ADD3DEB00F46BA2 /* Frameworks */,
 				44F46F6B1ADD3DEB00F46BA2 /* Resources */,
+				2E2D87AB1FB6BD2B00D86B91 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -154,6 +163,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2E2D87AB1FB6BD2B00D86B91 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run d0baaa4b39cc862e773fe2d1a007410a48ac3008 6517af0baf8dacbafc2f24832b627c05c23d906bae0195508bf1692cd9718df5";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		44F46F691ADD3DEB00F46BA2 /* Sources */ = {
@@ -295,6 +320,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Emoji Playlist/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -313,6 +342,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Emoji Playlist/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
