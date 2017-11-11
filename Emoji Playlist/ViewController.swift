@@ -24,7 +24,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var previousEmojiImage: UIImageView!
     @IBOutlet weak var previousBackground: UIImageView!
     var previousEmojiColor = UIColor.clear
-    var emojiCount = 0
     var keyboardHeight : CGFloat = 0
     
     // MARK: Setup
@@ -201,36 +200,31 @@ class ViewController: UIViewController {
             sender.text = nil
         }
         
-        guard let emoji = sender.text,
-            emoji.isEmoji else
-        {
+        guard let emoji = sender.text, emoji.isEmoji else {
             sender.text = ""
             showOpenKeyboardPopup()
             return
         }
         
-        //idk what this does but may need it later
-        /*if emoji.length > 1 {
-            let char2 = emoji.character(at: 1)
-            if char2 >= 57339 && char2 <= 57343
-            { //is skin tone marker
-                emoji = (rawEmoji as NSString).substring(from: rawEmoji.count - 2) as NSString
-            }
-            
-            if emoji.length % 4 == 0 && emoji.length > 4 { //flags stick together for some reason?
-                emoji = emoji.substring(from: emoji.length - 4) as NSString
-            }
-        }*/
-        
         //track emoji count for rate alert
         if emoji != self.emojiLabel.text {
-            emojiCount += 1
             
-            if emojiCount == 25 || emojiCount % 50 == 0 {
+            let emojiCount = UserDefaults.standard.integer(forKey: "emojiCount")
+            UserDefaults.standard.set(emojiCount + 1, forKey: "emojiCount")
+            
+            if emojiCount == 25 {
                 if #available(iOS 10.3, *) {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                        SKStoreReviewController.requestReview()
+                    showKeyboardButton.alpha = 0.0
+                    UIView.animate(withDuration: 1.5, delay: 1.5, animations: {
+                        self.showKeyboardButton.alpha = 1.0
+                    })
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(150)) {
                         self.hiddenField.resignFirstResponder()
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(350)) {
+                        SKStoreReviewController.requestReview()
                     }
                 }
             }

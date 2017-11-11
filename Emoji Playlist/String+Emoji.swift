@@ -32,48 +32,67 @@ extension String {
         CFStringTransform(cfstring, &range, kCFStringTransformToUnicodeName, false)
         let capitalName = "\(cfstring)"
         
-        if !capitalName.hasPrefix("\\") { //is number emoji
+        // handle number emoji
+        if !capitalName.hasPrefix("\\") {
             var splits = capitalName.components(separatedBy: "\\")
             return ((capitalName as NSString).length > 1 ? "keycap " : "") + splits[0]
         }
-            
-        else {
-            var splits = capitalName.components(separatedBy: "}")
-            if splits.last == "" { splits.removeLast() }
-            
-            for i in 0 ..< splits.count {
-                if (splits[i] as NSString).length > 3 {
-                    splits[i] = (splits[i] as NSString).substring(from: 3).lowercased()
-                }
-            }
-            
-            if splits.count == 1 {
-                return splits[0]
-            }
-            
-            if splits.count == 2{
-                if splits[1].hasPrefix("emoji modifier") || splits[1].hasPrefix("variation selector"){ //skin tone emojis
-                    return splits[0]
-                }
-                else { //flags are awful
-                    var flagName = ""
-                    for split in splits {
-                        let splitNS = split.uppercased() as NSString
-                        flagName += splitNS.substring(from: splitNS.length - 1)
-                    }
-                    
-                    if let countryName = countryNameForCode(flagName){
-                        flagName = countryName
-                    }
-                    
-                    return flagName + " flag"
-                }
+        
+        var splits = capitalName.components(separatedBy: "}")
+        if splits.last == "" { splits.removeLast() }
+        
+        // remove "\\N{" from each component
+        splits = splits.map { split -> String in
+            if (split as NSString).length > 3 {
+                return (split as NSString).substring(from: 3).lowercased()
+            } else {
+                return split
             }
         }
         
-        if self == "👁‍🗨" { return "eye in speech bubble" }
-        //still nothing somehow
-        return "family" //can only be family as far as I know
+        print("\(self): \(splits)")
+        
+        if splits.count == 1 {
+            return splits[0]
+        }
+        
+        // filter out modifiers
+        splits = splits.filter { split in
+            return !split.hasPrefix("emoji modifier")
+                && !split.hasPrefix("variation selector")
+                && split != "zero width joiner"
+                && split != "female sign"
+                && split != "male sign"
+        }
+        
+        // handle flags
+        if splits.count == 2 {
+            var flagName = ""
+            for split in splits {
+                flagName += split.replacingOccurrences(of: "regional indicator symbol letter ", with: "").uppercased()
+            }
+        
+            if let countryName = countryNameForCode(flagName){
+                return countryName
+            }
+        }
+        
+        // some don't have proper names, so override them with custom strings
+        let customOverrides = [
+            "👁‍🗨": "eye in speech bubble"
+        ]
+        
+        if let customOverride = customOverrides[self] {
+            return customOverride
+        }
+        
+        //if all else failed, just string together the names of the individual pieces
+        return splits.reduce("") { result, split in
+            if result.isEmpty { return split }
+            else {
+                return result + ", " + split
+            }
+        }
     }
     
     var emojiImage: UIImage {

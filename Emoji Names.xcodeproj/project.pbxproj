@@ -64,6 +64,7 @@
 				44F46F741ADD3DEB00F46BA2 /* ViewController.swift */,
 				2E2D87A71FB6A7E100D86B91 /* String+Emoji.swift */,
 				2E2D87A91FB6AA4700D86B91 /* UIImage+Color.swift */,
+				2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */,
 				44F46F761ADD3DEB00F46BA2 /* Main.storyboard */,
 				44F46F791ADD3DEB00F46BA2 /* Images.xcassets */,
 				44F46F7B1ADD3DEB00F46BA2 /* LaunchScreen.xib */,
@@ -75,7 +76,6 @@
 		44F46F701ADD3DEB00F46BA2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2E0BBC321B38A43200513D11 /* CountryCodeLookup.swift */,
 				44F46F711ADD3DEB00F46BA2 /* Info.plist */,
 			);
 			name = "Supporting Files";
