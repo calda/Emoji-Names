@@ -50,7 +50,7 @@ extension String {
             }
         }
         
-        print("\(self): \(splits)")
+        //print("\(self): \(splits)")
         
         if splits.count == 1 {
             return splits[0]

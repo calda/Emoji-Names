@@ -36,7 +36,7 @@
                                     <action selector="hiddenInputReceived:forEvent:" destination="vXZ-lx-hvc" eventType="editingChanged" id="s5a-bM-Su8"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NPw-A8-Ubs">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NPw-A8-Ubs">
                                 <rect key="frame" x="56" y="659" width="263" height="44"/>
                                 <color key="backgroundColor" red="0.96420931816101074" green="0.96414363384246826" blue="0.96418201923370361" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -52,22 +52,22 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OXI-VM-fJu" userLabel="previousBackground">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zyQ-Gh-9uO" userLabel="previousEmoji">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sht-Ij-rVi" userLabel="emoji view">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="350"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🧀" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SzE-5p-264">
-                                        <rect key="frame" x="133.66666666666666" y="95" width="108" height="120"/>
+                                        <rect key="frame" x="133.66666666666666" y="326" width="108" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="100"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Some Sort of Cheese" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="rtg-i6-8MM">
-                                        <rect key="frame" x="50" y="239.99999999999997" width="275" height="83.666666666666657"/>
+                                        <rect key="frame" x="50" y="471.00000000000006" width="275" height="83.666666666666686"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="35"/>
                                         <color key="textColor" red="0.33333333333333331" green="0.60784313725490191" blue="0.27058823529411763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -76,7 +76,6 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="SzE-5p-264" firstAttribute="centerX" secondItem="Sht-Ij-rVi" secondAttribute="centerX" id="0MP-GE-Z94"/>
-                                    <constraint firstAttribute="height" constant="350" id="DTp-wF-iuy"/>
                                     <constraint firstItem="SzE-5p-264" firstAttribute="centerY" secondItem="Sht-Ij-rVi" secondAttribute="centerY" constant="-20" id="NCZ-UH-DEe"/>
                                     <constraint firstItem="rtg-i6-8MM" firstAttribute="centerX" secondItem="SzE-5p-264" secondAttribute="centerX" id="UDL-Dt-0Bb"/>
                                     <constraint firstAttribute="trailing" secondItem="rtg-i6-8MM" secondAttribute="trailing" constant="50" id="pRU-Ko-h7b"/>
@@ -174,6 +173,7 @@
                             <constraint firstItem="eMG-TM-eUO" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="SVU-jh-PiX"/>
                             <constraint firstItem="OXI-VM-fJu" firstAttribute="centerY" secondItem="zyQ-Gh-9uO" secondAttribute="centerY" id="THE-PF-3B1"/>
                             <constraint firstItem="OXI-VM-fJu" firstAttribute="width" secondItem="zyQ-Gh-9uO" secondAttribute="width" id="UWK-cg-sM2"/>
+                            <constraint firstAttribute="bottom" secondItem="Sht-Ij-rVi" secondAttribute="bottom" id="X7g-Tg-dpD"/>
                             <constraint firstAttribute="trailing" secondItem="Sht-Ij-rVi" secondAttribute="trailing" id="Xtg-I3-skZ"/>
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="height" secondItem="Sht-Ij-rVi" secondAttribute="height" id="awr-MY-0x3"/>
                             <constraint firstItem="zyQ-Gh-9uO" firstAttribute="width" secondItem="Sht-Ij-rVi" secondAttribute="width" id="fqf-h3-hHJ"/>
@@ -187,7 +187,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="contentHeight" destination="DTp-wF-iuy" id="J2F-X5-Pe9"/>
+                        <outlet property="contentBottomConstraint" destination="X7g-Tg-dpD" id="ibi-sb-SWq"/>
                         <outlet property="emojiLabel" destination="SzE-5p-264" id="VWl-ho-lzS"/>
                         <outlet property="emojiNameLabel" destination="rtg-i6-8MM" id="efS-5B-Iva"/>
                         <outlet property="emojiView" destination="Sht-Ij-rVi" id="DCU-U3-B6o"/>

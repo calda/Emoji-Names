@@ -14,7 +14,6 @@
 		2EF4CEE21FB6BF5A005AA616 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CED91FB6BF5A005AA616 /* UIImage+Color.swift */; };
 		2EF4CEE31FB6BF5A005AA616 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CEDA1FB6BF5A005AA616 /* Images.xcassets */; };
 		2EF4CEE41FB6BF5A005AA616 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CEDB1FB6BF5A005AA616 /* AppDelegate.swift */; };
-		2EF4CEE51FB6BF5A005AA616 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CEDC1FB6BF5A005AA616 /* Info.plist */; };
 		2EF4CEE61FB6BF5A005AA616 /* String+Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CEDD1FB6BF5A005AA616 /* String+Emoji.swift */; };
 		2EF4CEE81FB6BF77005AA616 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF4CEE71FB6BF77005AA616 /* Crashlytics.framework */; };
 		2EF4CEEA1FB6BF82005AA616 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF4CEE91FB6BF82005AA616 /* Fabric.framework */; };
@@ -149,7 +148,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EF4CEE51FB6BF5A005AA616 /* Info.plist in Resources */,
 				2EF4CEE31FB6BF5A005AA616 /* Images.xcassets in Resources */,
 				2EF4CEDF1FB6BF5A005AA616 /* LaunchScreen.xib in Resources */,
 				2EF4CEE01FB6BF5A005AA616 /* Main.storyboard in Resources */,

@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var showKeyboardButton: UIButton!
     @IBOutlet weak var openKeyboardView: UIView!
     @IBOutlet weak var openKeyboardPosition: NSLayoutConstraint!
-    @IBOutlet weak var contentHeight: NSLayoutConstraint!
+    @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var topBar: UIView!
     @IBOutlet weak var emojiView: UIView!
@@ -25,9 +25,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var previousEmojiImage: UIImageView!
     @IBOutlet weak var previousBackground: UIImageView!
     var previousEmojiColor = UIColor.clear
-    var keyboardHeight : CGFloat = 0
+    var keyboardHeight: CGFloat? = 0
     
-    // MARK: Setup
+    // MARK: - Setup
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,6 +93,14 @@ class ViewController: UIViewController {
         emojiNameLabel.layer.shadowOffset = CGSize(width: 1, height: 1)
     }
     
+    //MARK: - Handle rotation and resizing
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        view.layoutIfNeeded()
+        updateContentHeight(animate: true)
+        changeToEmoji(emojiLabel.text ?? "😀", animate: false)
+    }
+    
     //MARK: - Showing and Hiding the Keyboard
     
     @IBAction func showKeyboard() { //called from app delegate or UIButton
@@ -103,21 +111,30 @@ class ViewController: UIViewController {
         })
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if !hiddenField.isFirstResponder {
+            showKeyboard()
+        }
+    }
+    
     var keyboardHidden = false
     
     @objc func keyboardChanged(_ notification: Notification) {
         guard let info = notification.userInfo,
             let value = info[UIKeyboardFrameEndUserInfoKey],
-            let rawFrame = (value as AnyObject).cgRectValue,
-            let duration = info[UIKeyboardAnimationDurationUserInfoKey] else
+            let rawFrame = (value as AnyObject).cgRectValue else
         {
             return
         }
         
         let keyboardFrame = view.convert(rawFrame, from: nil)
-        self.keyboardHeight = keyboardFrame.height
+        if keyboardFrame.minY >= view.frame.maxY {
+            self.keyboardHeight = nil
+        } else {
+            self.keyboardHeight = keyboardFrame.height
+        }
         
-        updateContentHeight(animate: "\(duration)" != "0")
+        updateContentHeight()
         
         if keyboardHidden {
             UIView.animate(
@@ -173,8 +190,7 @@ class ViewController: UIViewController {
     }
     
     func updateContentHeight(animate: Bool = true) {
-        let availableHeight = self.view.frame.height - keyboardHeight
-        contentHeight.constant = availableHeight
+        contentBottomConstraint.constant = keyboardHeight ?? 0
         
         let animations = { self.view.layoutIfNeeded() }
         
@@ -248,13 +264,9 @@ class ViewController: UIViewController {
         
         let primaryColor = emoji.emojiImage.primaryColor
         emojiView.backgroundColor = primaryColor
-        let (text, border) = primaryColor.secondaryColorsForBackground
+        let (text, _) = primaryColor.secondaryColorsForBackground
         emojiNameLabel.textColor = text
         self.view.backgroundColor = primaryColor
-        
-        UIApplication.shared.setStatusBarStyle(
-            (border.luma > 0.28 ? .default : .lightContent),
-            animated: true)
         
         if animate {
             animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
@@ -269,7 +281,7 @@ class ViewController: UIViewController {
         
         if showCircularMask {
             let frame = emojiView.frame
-            let diameter = min(frame.size.height, frame.size.width) * 2.0
+            let diameter = max(frame.size.height, frame.size.width) * 2.0
             
             let xOffset = -(diameter - frame.width) / 2.0
             let yOffset = -(diameter - frame.height) / 2.0
@@ -316,7 +328,10 @@ class ViewController: UIViewController {
             self.emojiLabel.alpha = 1.0
             self.previousEmojiImage.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
             self.previousEmojiImage.alpha = 0.0
-        }, completion: nil)
+        }, completion: { _ in
+            self.previousBackground.image = nil
+            self.emojiView.layer.mask = nil
+        })
     }
     
     func copyCurrentEmojiToImageView() {
