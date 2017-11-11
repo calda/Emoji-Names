@@ -8,6 +8,7 @@
 
 import UIKit
 import StoreKit
+import Crashlytics
 
 class ViewController: UIViewController {
     
@@ -238,6 +239,12 @@ class ViewController: UIViewController {
         
         emojiLabel.text = emoji
         emojiNameLabel.text = emoji.emojiName
+        
+        Answers.logCustomEvent(
+            withName: "Emoji Viewed",
+            customAttributes: [
+                "Emoji": emoji,
+                "Emoji Name": emoji.emojiName])
         
         let primaryColor = emoji.emojiImage.primaryColor
         emojiView.backgroundColor = primaryColor
