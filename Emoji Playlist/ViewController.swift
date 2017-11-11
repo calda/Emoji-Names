@@ -7,9 +7,7 @@
 //
 
 import UIKit
-
-let ENShowKeyboardNotification = "com.cal.emoji-names.show-keyboard"
-let ENHasRatedAppKey = "com.cal.emoji-names.has-rated-app"
+import StoreKit
 
 class ViewController: UIViewController {
     
@@ -32,17 +30,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if is4S() {
-            self.emojiNameLabel.font = UIFont.systemFont(ofSize: 25.0)
-        }
-        
         updateContentHeight(animate: false)
         changeToEmoji("😀", animate: false)
         emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardChanged(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.showKeyboard), name: NSNotification.Name(rawValue: ENShowKeyboardNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name:. UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
@@ -70,7 +63,7 @@ class ViewController: UIViewController {
     
     var keyboardHidden = false
     
-    func keyboardChanged(_ notification: Notification) {
+    @objc func keyboardChanged(_ notification: Notification) {
         let info = notification.userInfo!
         let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]! as AnyObject
         
@@ -161,11 +154,16 @@ class ViewController: UIViewController {
             }
         }
         
+        //track emoji count for rate alert
         if rawEmoji != self.emojiLabel.text {
             emojiCount += 1
-            if emojiCount == 25 {
-                delay(1.0) {
-                    self.showRateAlert()
+            
+            if emojiCount == 25 || emojiCount % 50 == 0 {
+                if #available(iOS 10.3, *) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                        SKStoreReviewController.requestReview()
+                        self.hiddenField.resignFirstResponder()
+                    }
                 }
             }
         }
@@ -259,7 +257,7 @@ class ViewController: UIViewController {
         
         let emoji = emojiString as NSString
         let font = UIFont.systemFont(ofSize: 75.0)
-        let attributes = [NSFontAttributeName : font as AnyObject]
+        let attributes = [NSAttributedStringKey.font : font as AnyObject]
         let drawSize = emoji.boundingRect(with: size.size, options: .usesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
         
         let xOffset = (size.width - drawSize.width) / 2
@@ -443,31 +441,6 @@ class ViewController: UIViewController {
         emojiLabel.isHidden = false
         emojiNameLabel.isHidden = false
     }
-
-    //MARK: - Self Promotion
-    
-    func showRateAlert() {
-        let data = UserDefaults.standard
-        if data.bool(forKey: ENHasRatedAppKey) { return }
-        
-        self.previousBackground.image = nil
-        self.showKeyboardButton.isHidden = true
-        
-        let alert = UIAlertController(title: "Rate Emoji Names?", message: "It looks like you're enjoying Emoji Names so far! Would you mind giving it a rating in the App Store so other people can hear how awesome it is?", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "No Thanks", style: .destructive, handler: { _ in
-            delay(0.5) { self.showKeyboardButton.isHidden = false }
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Sure!", style: .default, handler: { _ in
-            data.set(true, forKey: ENHasRatedAppKey)
-            let URL = Foundation.URL(string: "itms://itunes.apple.com/us/app/emoji-names/id1060405457?ls=1&mt=8")
-            UIApplication.shared.openURL(URL!)
-            self.showKeyboardButton.isHidden = false
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
-    }
     
 }
 
@@ -493,8 +466,4 @@ extension UIColor {
         return diffRed < within && diffBlue < within && diffGreen < within && diffAlpha < within
     }
     
-}
-
-func is4S() -> Bool {
-    return UIScreen.main.bounds.height == 480.0
 }
