@@ -77,21 +77,75 @@ extension String {
             }
         }
         
-        // some don't have proper names, so override them with custom strings
+        // some don't have proper names or are too complicated, so override them with custom strings
         let customOverrides = [
-            "👁‍🗨": "eye in speech bubble"
+            "👁‍🗨": "eye in speech bubble",
+            "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "England",
+            "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "Scotland",
+            "🏴󠁧󠁢󠁷󠁬󠁳󠁿": "Wales",
+            "👨‍❤️‍💋‍👨": "kiss",
+            "👩‍❤️‍💋‍👩": "kiss",
+            "👩‍❤️‍👩": "couple with heart",
+            "👨‍❤️‍👨": "couple with heart"
         ]
         
         if let customOverride = customOverrides[self] {
             return customOverride
         }
         
+        //special treatment for family comosition emoji
+        if splits.filter({ !["man", "woman", "girl", "boy"].contains($0) }).count == 0 {
+            return "family"
+        }
+        
         //if all else failed, just string together the names of the individual pieces
-        return splits.reduce("") { result, split in
+        let stitchedName = splits.reduce("") { result, split in
             if result.isEmpty { return split }
             else {
                 return result + ", " + split
             }
+        }
+        
+        // ONE LAST THING: lot of the profession emoji are just gender + some object, so fix those
+        let stitchedOverrides = [
+            "woman, staff of aesculapius": "female doctor",
+            "man, staff of aesculapius": "male doctor",
+            "woman, ear of rice": "female farmer",
+            "man, ear of rice": "male farmer",
+            "woman, cooking": "female chef",
+            "man, cooking": "male chef",
+            "woman, graduation cap": "woman graduating",
+            "man, graduation cap": "man graduating",
+            "woman, microphone": "female singer",
+            "man, microphone": "male singer",
+            "woman, school": "female teacher",
+            "man, school": "male teacher",
+            "woman, factory": "female factory worker",
+            "man, factory": "male factory worker",
+            "woman, personal computer": "female technologist",
+            "man, personal computer": "male technologist",
+            "woman, briefcase": "businesswoman",
+            "man, briefcase": "businessman",
+            "woman, wrench": "female mechanic",
+            "man, wrench": "male mechanic",
+            "woman, microscope": "female scientist",
+            "man, microscope": "male scientist",
+            "woman, artist palette": "female artist",
+            "man, artist palette": "male artist",
+            "woman, fire engine": "female firefighter",
+            "man, fire engine": "male firerighter",
+            "woman, airplane": "female pilot",
+            "man, airplane": "male pilot",
+            "woman, rocket": "female astronaut",
+            "man, rocket": "male astrnaut",
+            "woman, scales": "female judge",
+            "man, scales": "male judge"
+        ]
+        
+        if let stitchedOverride = stitchedOverrides[stitchedName] {
+            return stitchedOverride
+        } else {
+            return stitchedName
         }
     }
     
