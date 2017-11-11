@@ -27,8 +27,13 @@ class ViewController: UIViewController {
     var emojiCount = 0
     var keyboardHeight : CGFloat = 0
     
+    // MARK: Setup
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpStatusBarView()
+        addTextShadows()
         
         updateContentHeight(animate: false)
         changeToEmoji("😀", animate: false)
@@ -42,13 +47,50 @@ class ViewController: UIViewController {
         self.openKeyboardView.layer.masksToBounds = true
         
         showKeyboardButton.alpha = 0.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.updateContentHeight(animate: false)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        showKeyboard()
+        
         UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
             self.showKeyboardButton.alpha = 1.0
         }, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.updateContentHeight(animate: false)
+    func setUpStatusBarView() {
+        let statusBarView = UIView()
+        statusBarView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.08)
+        statusBarView.translatesAutoresizingMaskIntoConstraints = false
+        self.topBar = statusBarView
+        
+        view.addSubview(statusBarView)
+        if #available(iOS 11.0, *) {
+            statusBarView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            statusBarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+            statusBarView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+            statusBarView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        } else {
+            statusBarView.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            statusBarView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            statusBarView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            statusBarView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        }
+    }
+    
+    func addTextShadows() {
+        emojiLabel.layer.shadowOpacity = 0.15
+        emojiLabel.layer.shadowRadius = 2.0
+        emojiLabel.layer.shadowColor = UIColor.black.cgColor
+        emojiLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
+        
+        emojiNameLabel.layer.shadowOpacity = 0.065
+        emojiNameLabel.layer.shadowRadius = 2.0
+        emojiNameLabel.layer.shadowColor = UIColor.black.cgColor
+        emojiNameLabel.layer.shadowOffset = CGSize(width: 1, height: 1)
     }
     
     //MARK: - Showing and Hiding the Keyboard
@@ -123,6 +165,7 @@ class ViewController: UIViewController {
         UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: animations, completion: nil)
     }
     
+    
     //MARK: - emoji input and processing
     
     @IBAction func hiddenInputReceived(_ sender: UITextField, forEvent event: UIEvent) {
@@ -181,12 +224,11 @@ class ViewController: UIViewController {
         emojiView.backgroundColor = primaryColor
         let (text, border) = secondaryColorsForBackground(primaryColor)
         emojiNameLabel.textColor = text
-        topBar.backgroundColor = border
         self.view.backgroundColor = primaryColor
         
-        let backgroundLuma = colorLuma(border)
-        let style = backgroundLuma > 0.28 ? UIStatusBarStyle.default : UIStatusBarStyle.lightContent
-        UIApplication.shared.setStatusBarStyle(style, animated: true)
+        UIApplication.shared.setStatusBarStyle(
+            (colorLuma(border) > 0.28 ? .default : .lightContent),
+            animated: true)
         
         if animate {
             animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
