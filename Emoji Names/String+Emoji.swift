@@ -93,7 +93,7 @@ extension String {
             return customOverride
         }
         
-        //special treatment for family comosition emoji
+        //special treatment for family composition emoji
         if splits.filter({ !["man", "woman", "girl", "boy"].contains($0) }).count == 0 {
             return "family"
         }
