@@ -74,7 +74,7 @@ class ViewController: UIViewController {
             statusBarView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
             statusBarView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
         } else {
-            statusBarView.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            statusBarView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             statusBarView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
             statusBarView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
             statusBarView.heightAnchor.constraint(equalToConstant: 20).isActive = true
