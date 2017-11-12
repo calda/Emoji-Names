@@ -65,6 +65,10 @@ extension String {
                 && split != "male sign"
         }
         
+        if splits.count == 1 {
+            return splits[0]
+        }
+        
         // handle flags
         if splits.count == 2 {
             var flagName = ""
@@ -83,6 +87,7 @@ extension String {
             "🏴󠁧󠁢󠁥󠁮󠁧󠁿": "England",
             "🏴󠁧󠁢󠁳󠁣󠁴󠁿": "Scotland",
             "🏴󠁧󠁢󠁷󠁬󠁳󠁿": "Wales",
+            "🏳️‍🌈": "pride flag",
             "👨‍❤️‍💋‍👨": "kiss",
             "👩‍❤️‍💋‍👩": "kiss",
             "👩‍❤️‍👩": "couple with heart",
