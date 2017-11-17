@@ -262,7 +262,7 @@ class ViewController: UIViewController {
                 "Emoji": emoji,
                 "Emoji Name": emoji.emojiName])
         
-        let primaryColor = emoji.emojiImage.primaryColor
+        let primaryColor = Setting.preferredEmojiStyle.value.image(of: emoji).primaryColor
         emojiView.backgroundColor = primaryColor
         let (text, _) = primaryColor.secondaryColorsForBackground
         emojiNameLabel.textColor = text

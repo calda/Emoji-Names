@@ -153,32 +153,5 @@ extension String {
             return stitchedName
         }
     }
-    
-    var emojiImage: UIImage {
-        let size = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
-        UIGraphicsBeginImageContext(size.size)
-        let context = UIGraphicsGetCurrentContext()
-        
-        context?.setFillColor(UIColor.white.cgColor)
-        context?.fill(size)
-        context?.setAllowsAntialiasing(true)
-        context?.setShouldAntialias(true)
-        
-        let emoji = self as NSString
-        let font = UIFont.systemFont(ofSize: 75.0)
-        let attributes = [NSAttributedStringKey.font : font as AnyObject]
-        let drawSize = emoji.boundingRect(with: size.size, options: .usesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
-        
-        let xOffset = (size.width - drawSize.width) / 2
-        let yOffset = (size.height - drawSize.height) / 2
-        let drawPoint = CGPoint(x: xOffset, y: yOffset)
-        let drawRect = CGRect(origin: drawPoint, size: drawSize)
-        emoji.draw(in: drawRect.integral, withAttributes: attributes)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return image!
-    }
-    
+
 }
