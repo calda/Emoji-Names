@@ -253,7 +253,7 @@ class ViewController: UIViewController {
     func changeToEmoji(_ emoji: String, animate: Bool = true) {
         copyCurrentEmojiToImageView()
         
-        emojiLabel.text = emoji
+        Setting.preferredEmojiStyle.value.showEmoji(emoji, in: emojiLabel)
         emojiNameLabel.text = emoji.emojiName
         
         Answers.logCustomEvent(

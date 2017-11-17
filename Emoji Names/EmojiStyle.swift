@@ -14,6 +14,8 @@ enum EmojiStyle: String, EnumType {
     case system
     case twitter
     
+    // MARK: emoji -> UIImage
+    
     func image(of emoji: String) -> UIImage {
         switch self {
         case .system:
@@ -25,15 +27,18 @@ enum EmojiStyle: String, EnumType {
     
     private func loadTwemojiImage(
         for emoji: String,
-        size: CGSize = CGSize(width: 100, height: 100)) -> UIImage?
+        size: CGSize = CGSize(width: 100, height: 100),
+        ignoringVariationSelectors: Bool = false) -> UIImage?
     {
         let codepointStrings = emoji.unicodeScalars.flatMap { scalar -> String? in
             let codepoint = scalar.value
             let hexString = String(format: "%x", codepoint)
             
-            //twemoji excludes FE0F (unicode variant selector 16)
-            guard hexString != "FE0F" else {
-                return nil
+            if ignoringVariationSelectors {
+                // twemoji sometimes excludes fe0f (uniode variation selector 16)
+                guard hexString != "fe0f" else {
+                    return nil
+                }
             }
             
             return hexString
@@ -44,7 +49,12 @@ enum EmojiStyle: String, EnumType {
         guard Bundle.main.path(forResource: expectedVectorName, ofType: "svg") != nil,
             let vector = SVGKImage(named: "\(expectedVectorName).svg") else
         {
-            return nil
+            //some twemoji include the variation selector, some don't
+            if !ignoringVariationSelectors {
+                return loadTwemojiImage(for: emoji, size: size, ignoringVariationSelectors: true)
+            } else {
+                return nil
+            }
         }
         
         vector.size = size
@@ -77,4 +87,32 @@ enum EmojiStyle: String, EnumType {
         
         return image!
     }
+    
+    // MARK: render emoji onto UILabel
+    
+    func showEmoji(_ emoji: String, in label: UILabel) {
+        switch self {
+        case .system:
+            label.text = emoji
+        case .twitter:
+            showTwemojiImage(for: emoji, in: label)
+        }
+    }
+    
+    private func showTwemojiImage(for emoji: String, in label: UILabel) {
+        let emojiDimension = label.font.pointSize
+        let emojiSize = CGSize(width: emojiDimension, height: emojiDimension)
+        
+        guard let twemojiImage = loadTwemojiImage(for: emoji/*, size: emojiSize*/) else {
+            EmojiStyle.system.showEmoji(emoji, in: label)
+            return
+        }
+        
+        let textAttachment = NSTextAttachment()
+        textAttachment.image = twemojiImage
+        label.attributedText = NSAttributedString(attachment: textAttachment)
+        label.clipsToBounds = false
+    }
+    
 }
+
