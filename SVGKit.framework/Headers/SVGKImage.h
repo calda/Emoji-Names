@@ -73,6 +73,10 @@
 + (SVGKImage *)imageNamed:(NSString *)name;
 + (SVGKImage *)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 
+- (id)initWithContentsOfFile:(NSString *)path;
+- (id)initWithData:(NSData *)data;
+
+
 /** NB: if an SVG defines no limits to itself - neither a viewbox, nor an <svg width=""> nor an <svg height=""> - and
  you have not explicitly given the SVGKImage instance a "user defined size" (by setting .size) ... then there is NO
  LEGAL SIZE VALUE for self.size to return, and it WILL ASSERT!

@@ -21,14 +21,25 @@ enum EmojiStyle: String, EnumType {
         case .system:
             return generateImageWithSystemFont(for: emoji)
         case .twitter:
-            return loadTwemojiImage(for: emoji) ?? generateImageWithSystemFont(for: emoji)
+            return generateTwemojiImage(for: emoji) ?? generateImageWithSystemFont(for: emoji)
         }
     }
     
-    private func loadTwemojiImage(
+    private func generateTwemojiImage(
         for emoji: String,
-        size: CGSize = CGSize(width: 100, height: 100),
-        ignoringVariationSelectors: Bool = false) -> UIImage?
+        size: CGSize = CGSize(width: 100, height: 100)) -> UIImage?
+    {
+        guard let vector = loadTwemojiVector(for: emoji) else {
+            return nil
+        }
+        
+        vector.size = size
+        return vector.uiImage
+    }
+    
+    private func loadTwemojiVector(
+        for emoji: String,
+        ignoringVariationSelectors: Bool = false) -> SVGKImage?
     {
         let codepointStrings = emoji.unicodeScalars.flatMap { scalar -> String? in
             let codepoint = scalar.value
@@ -46,41 +57,57 @@ enum EmojiStyle: String, EnumType {
         
         let expectedVectorName = codepointStrings.joined(separator: "-")
         
-        guard Bundle.main.path(forResource: expectedVectorName, ofType: "svg") != nil,
-            let vector = SVGKImage(named: "\(expectedVectorName).svg") else
+        guard let svgFilePath = Bundle.main.path(forResource: expectedVectorName, ofType: "svg"),
+            let svgXml = try? String(contentsOf: URL(fileURLWithPath: svgFilePath)) else
         {
             //some twemoji include the variation selector, some don't
             if !ignoringVariationSelectors {
-                return loadTwemojiImage(for: emoji, size: size, ignoringVariationSelectors: true)
+                return loadTwemojiVector(for: emoji, ignoringVariationSelectors: true)
             } else {
                 return nil
             }
         }
         
-        vector.size = size
-        return vector.uiImage
+        // i think there's some bug in SVGKit --
+        // it was clipping the images to 36x36 instead of the full 45x45
+        let correctedXml = svgXml.replacingOccurrences(
+            of: "d=\"M 0,36 36,36 36,0 0,0 0,36 Z\"",
+            with: "d=\"M 0,45 45,45 45,0 0,0 0,45 Z\"")
+        .replacingOccurrences(
+            of: "d=\"M 0,0 36,0 36,36 0,36 0,0 Z\"",
+            with: "d=\"M 0,0 45,0 45,45 0,45 0,0 Z\"")
+        
+        return SVGKImage(data: correctedXml.data(using: .utf8))
     }
     
-    private func generateImageWithSystemFont(for emojiString: String) -> UIImage {
-        let size = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
+    private func generateImageWithSystemFont(
+        for emojiString: String,
+        size: CGSize = CGSize(width: 100, height: 100)) -> UIImage
+    {
+        return renderImageInNewContext(size: size, renderContents: { _ in
+            let emoji = emojiString as NSString
+            let font = UIFont.systemFont(ofSize: 75.0)
+            let drawSize = emoji.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font : font], context: NSStringDrawingContext()).size
+            
+            let xOffset = (size.width - drawSize.width) / 2
+            let yOffset = (size.height - drawSize.height) / 2
+            let drawPoint = CGPoint(x: xOffset, y: yOffset)
+            let drawRect = CGRect(origin: drawPoint, size: drawSize)
+            emoji.draw(in: drawRect.integral, withAttributes: [.font : font])
+        })
+    }
+    
+    private func renderImageInNewContext(size: CGSize, renderContents: (CGContext) -> ()) -> UIImage {
+        let size = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContext(size.size)
-        let context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()!
         
-        context?.setFillColor(UIColor.white.cgColor)
-        context?.fill(size)
-        context?.setAllowsAntialiasing(true)
-        context?.setShouldAntialias(true)
+        context.setFillColor(UIColor.clear.cgColor)
+        context.fill(size)
+        context.setAllowsAntialiasing(true)
+        context.setShouldAntialias(true)
         
-        let emoji = emojiString as NSString
-        let font = UIFont.systemFont(ofSize: 75.0)
-        let attributes = [NSAttributedStringKey.font : font as AnyObject]
-        let drawSize = emoji.boundingRect(with: size.size, options: .usesLineFragmentOrigin, attributes: attributes, context: NSStringDrawingContext()).size
-        
-        let xOffset = (size.width - drawSize.width) / 2
-        let yOffset = (size.height - drawSize.height) / 2
-        let drawPoint = CGPoint(x: xOffset, y: yOffset)
-        let drawRect = CGRect(origin: drawPoint, size: drawSize)
-        emoji.draw(in: drawRect.integral, withAttributes: attributes)
+        renderContents(context)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -103,7 +130,7 @@ enum EmojiStyle: String, EnumType {
         let emojiDimension = label.font.pointSize
         let emojiSize = CGSize(width: emojiDimension, height: emojiDimension)
         
-        guard let twemojiImage = loadTwemojiImage(for: emoji/*, size: emojiSize*/) else {
+        guard let twemojiImage = generateTwemojiImage(for: emoji, size: emojiSize) else {
             EmojiStyle.system.showEmoji(emoji, in: label)
             return
         }
