@@ -10,17 +10,25 @@ import UIKit
 
 extension UIImage {
     
-    var primaryColor: UIColor {
-        guard let image = self.cgImage else { return .white }
-        let pixelData = image.dataProvider?.data
-        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+    var prominentColor: UIColor {
+        guard let pixelData = self.onWhiteBackground?.cgImage?.dataProvider?.data else {
+            return #colorLiteral(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
+        }
         
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
         typealias Pixel = (red: Int, green: Int, blue: Int)
+        
         func pixelAtPoint(_ x: Int, _ y: Int) -> Pixel {
             let pixelIndex = ((Int(self.size.width) * y) + x) * 4
-            let b = Int(data[pixelIndex])
-            let g = Int(data[pixelIndex + 1])
             let r = Int(data[pixelIndex + 2])
+            let g = Int(data[pixelIndex + 1])
+            let b = Int(data[pixelIndex])
+            let alpha = Int(data[pixelIndex + 3])
+            
+            if alpha < 255 {
+                return (0, 0, 0)
+            }
+            
             return (r, g, b)
         }
         
@@ -28,38 +36,81 @@ extension UIImage {
             return Int(int / interval) * interval
         }
         
-        var countMap: [String : (color: Pixel, count: Int)] = [:]
-        var maximum: (color: Pixel, count: Int)?
-        
-        for y in 0 ..< Int(self.size.width) {
-            for x in 0 ..< Int(self.size.height) {
-                let pixel = pixelAtPoint(x, y)
-                
-                //ignore if this color is close to grayscale
-                let average = (pixel.red + pixel.green + pixel.blue) / 3
-                if abs(pixel.red - average) < 5
-                    && abs(pixel.green - average) < 5
-                    && abs(pixel.red - average) < 5 {
-                    continue
-                }
-                
-                let red = clampInt(pixel.red, onInterval: 20)
-                let green = clampInt(pixel.green, onInterval: 20)
-                let blue = clampInt(pixel.blue, onInterval: 20)
-                let key = "r:\(red) g:\(green) b:\(blue)"
-                
-                var (_, currentCount) = countMap[key] ?? ((0, 0, 0), 0)
-                currentCount += 1
-                countMap.updateValue((pixel, currentCount), forKey: key)
-                
-                if currentCount > (maximum?.count ?? 0) {
-                    maximum = (pixel, currentCount)
-                }
-            }
+        enum ProminentColorMode {
+            case ignoreGrayscale
+            case ignoreWhiteOnly
+            case ignoreNothing
         }
         
-        let color = maximum?.color ?? (red: 255, green: 255, blue: 255)
-        return UIColor(red: CGFloat(color.red) / 255.0, green: CGFloat(color.green) / 255.0, blue: CGFloat(color.blue) / 255.0, alpha: 1.0)
+        func mostFrequentColor(_ mode: ProminentColorMode) -> UIColor? {
+            var countMap: [String : (color: Pixel, count: Int)] = [:]
+            var maximum: (color: Pixel, count: Int)?
+            
+            for y in 0 ..< Int(self.size.width) {
+                for x in 0 ..< Int(self.size.height) {
+                    let pixel = pixelAtPoint(x, y)
+                    
+                    if mode == .ignoreGrayscale {
+                        //ignore if this color is close to grayscale
+                        let average = (pixel.red + pixel.green + pixel.blue) / 3
+                        if abs(pixel.red - average) < 20
+                            && abs(pixel.green - average) < 20
+                            && abs(pixel.red - average) < 20 {
+                            continue
+                        }
+                    }
+                    
+                    if mode == .ignoreWhiteOnly {
+                        if pixel.red > 250 && pixel.green > 250 && pixel.red > 250 {
+                            continue
+                        }
+                    }
+                    
+                    let red = clampInt(pixel.red, onInterval: 20)
+                    let green = clampInt(pixel.green, onInterval: 20)
+                    let blue = clampInt(pixel.blue, onInterval: 20)
+                    let key = "r:\(red) g:\(green) b:\(blue)"
+                    
+                    var (_, currentCount) = countMap[key] ?? ((0, 0, 0), 0)
+                    currentCount += 1
+                    countMap.updateValue((pixel, currentCount), forKey: key)
+                    
+                    if currentCount > (maximum?.count ?? 0) {
+                        maximum = (pixel, currentCount)
+                    }
+                }
+            }
+            
+            guard let pixel = maximum?.color else {
+                return nil
+            }
+            
+            return UIColor(
+                red: CGFloat(pixel.red) / 255.0,
+                green: CGFloat(pixel.green) / 255.0,
+                blue: CGFloat(pixel.blue) / 255.0,
+                alpha: 1.0)
+        }
+        
+        let prominentColor = mostFrequentColor(.ignoreGrayscale)
+            ?? mostFrequentColor(.ignoreWhiteOnly)
+            ?? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        return prominentColor
+    }
+    
+    private var onWhiteBackground: UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, true, 1.0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        context.setFillColor(UIColor.white.cgColor)
+        context.fill(CGRect(origin: .zero, size: size))
+        
+        guard let cgImage = cgImage else { return nil }
+        context.draw(cgImage, in: CGRect(origin: .zero, size: size))
+        
+        guard let imageOnWhite = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        return imageOnWhite
     }
     
 }
@@ -78,6 +129,31 @@ extension UIColor {
         return (lumaR + lumaG + lumaB) / 3
     }
     
+    var lightened: UIColor {
+        return lightened(by: 0.1)
+    }
+    
+    var stronglyLightened: UIColor {
+        return lightened(by: 0.25)
+    }
+    
+    private func lightened(by desaturationAmount: CGFloat) -> UIColor {
+        var h: CGFloat = 0
+        var s: CGFloat = 0
+        var b: CGFloat = 0
+        getHue(&h, saturation: &s, brightness: &b, alpha: nil)
+        
+        // lighten grays/blacks
+        if s <= 0.1 {
+            return UIColor(hue: h, saturation: s, brightness: b + 0.2, alpha: 1)
+        }
+            
+        // desaturate vibrant colors
+        else {
+            return UIColor(hue: h, saturation: max(s - desaturationAmount, 0.1), brightness: b, alpha: 1)
+        }
+    }
+    
     var secondaryColorsForBackground: (text: UIColor, border: UIColor) {
         var hue : CGFloat  = 0.0
         var sat : CGFloat  = 0.0
@@ -86,11 +162,14 @@ extension UIColor {
         
         var textColor = UIColor(hue: hue, saturation: sat, brightness: bright + 0.35, alpha: 1.0)
 
-        let lumaDiff = abs(textColor.luma - self.luma)
+        var lumaDiff = abs(textColor.luma - self.luma)
         if lumaDiff < 0.8 && textColor.luma > 0.1 {
             textColor = UIColor(hue: hue, saturation: sat, brightness: bright - 0.35, alpha: 1.0)
-        } else if lumaDiff < 0.8 {
-            textColor = UIColor(hue: hue, saturation: sat - 0.5, brightness: bright + 0.5, alpha: 1.0)
+            lumaDiff = abs(textColor.luma - self.luma)
+        }
+        
+        if lumaDiff < 0.05 || textColor.luma < 0.1 {
+            textColor = UIColor(hue: hue, saturation: sat - 0.25, brightness: bright + 0.5, alpha: 1.0)
         }
         
         let borderColor = UIColor(hue: hue, saturation: sat, brightness: bright - 0.1, alpha: 1.0)

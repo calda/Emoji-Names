@@ -152,8 +152,9 @@ class ViewController: UIViewController {
         
     }
     
+    private var _preferredStatusBarStyle = UIStatusBarStyle.lightContent
     override var preferredStatusBarStyle : UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
+        return _preferredStatusBarStyle
     }
 
     var isAnimatingPopup = false
@@ -262,15 +263,21 @@ class ViewController: UIViewController {
                 "Emoji": emoji,
                 "Emoji Name": emoji.emojiName])
         
-        let primaryColor = Setting.preferredEmojiStyle.value.image(of: emoji).primaryColor
+        let primaryColor = Setting.preferredEmojiStyle.value.backgroundColor(for: emoji)
         emojiView.backgroundColor = primaryColor
-        let (text, _) = primaryColor.secondaryColorsForBackground
-        emojiNameLabel.textColor = text
+        
+        let (textColor, statusBarColor) = primaryColor.secondaryColorsForBackground
+        emojiNameLabel.textColor = textColor
         self.view.backgroundColor = primaryColor
         
         if animate {
             animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
         }
+        
+        _preferredStatusBarStyle = (statusBarColor.luma > 0.27) ? .default : .lightContent
+        UIView.animate(withDuration: 0.2, animations: {
+            self.setNeedsStatusBarAppearanceUpdate()
+        })
         
         previousEmojiColor = primaryColor
     }

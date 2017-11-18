@@ -16,7 +16,7 @@ enum EmojiStyle: String, EnumType {
     
     // MARK: emoji -> UIImage
     
-    func image(of emoji: String) -> UIImage {
+    private func image(of emoji: String) -> UIImage {
         switch self {
         case .system:
             return generateImageWithSystemFont(for: emoji)
@@ -113,6 +113,19 @@ enum EmojiStyle: String, EnumType {
         UIGraphicsEndImageContext()
         
         return image!
+    }
+    
+    // MARK: prominent color -- different styles need different postprocessing
+    
+    func backgroundColor(for emoji: String) -> UIColor {
+        let prominentColor = image(of: emoji).prominentColor
+        
+        switch self {
+        case .system:
+            return prominentColor.lightened
+        case .twitter:
+            return prominentColor.stronglyLightened
+        }
     }
     
     // MARK: render emoji onto UILabel
