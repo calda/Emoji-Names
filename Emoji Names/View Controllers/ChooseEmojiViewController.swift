@@ -1,5 +1,5 @@
 //
-//  PasteDisambiguationViewController.swift
+//  ChooseEmojiViewController.swift
 //  Emoji Names
 //
 //  Created by Cal Stephens on 11/19/17.
@@ -9,36 +9,36 @@
 import UIKit
 import AdaptiveFormSheet
 
-// MARK: PasteDisambiguationViewControllerDelegate
+// MARK: ChooseEmojiViewControllerDelegate
 
-protocol PasteDisambiguationViewControllerDelegate: class {
+protocol ChooseEmojiViewControllerDelegate: class {
     
-    func pasteDisambiguationViewController(
-        _ viewController: PasteDisambiguationViewController,
+    func chooseEmojiViewController(
+        _ viewController: ChooseEmojiViewController,
         didSelectEmoji emoji: String)
     
 }
 
-// MARK: PasteDisambiguationViewController
+// MARK: ChooseEmojiViewController
 
-class PasteDisambiguationViewController: AFSModalViewController {
+class ChooseEmojiViewController: AFSModalViewController {
     
-    var pastedEmoji: [String]!
-    weak var delegate: PasteDisambiguationViewControllerDelegate?
+    var emoji: [String]!
+    weak var delegate: ChooseEmojiViewControllerDelegate?
     
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
     // MARK: Presentation
     
-    static func present(for pastedEmoji: [String], over source: UIViewController) {
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Paste Disambiguation") as! PasteDisambiguationViewController
+    static func present(for emoji: [String], over source: UIViewController) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Paste Disambiguation") as! ChooseEmojiViewController
         
-        if let delegate = source as? PasteDisambiguationViewControllerDelegate {
+        if let delegate = source as? ChooseEmojiViewControllerDelegate {
             viewController.delegate = delegate
         }
         
-        viewController.pastedEmoji = pastedEmoji
+        viewController.emoji = emoji
         source.present(viewController, animated: true, completion: nil)
     }
     
@@ -52,8 +52,8 @@ class PasteDisambiguationViewController: AFSModalViewController {
         self.dismiss(animated: true, completion: nil)
         
         if let selectedIndex = collectionView.indexPathsForSelectedItems?.first?.item {
-            delegate?.pasteDisambiguationViewController(self,
-                didSelectEmoji: pastedEmoji[selectedIndex])
+            delegate?.chooseEmojiViewController(self,
+                didSelectEmoji: emoji[selectedIndex])
         }
     }
     
@@ -61,7 +61,7 @@ class PasteDisambiguationViewController: AFSModalViewController {
 
 // MARK: AFSModalOptionsProvider
 
-extension PasteDisambiguationViewController: AFSModalOptionsProvider {
+extension ChooseEmojiViewController: AFSModalOptionsProvider {
     
     var dismissWhenUserTapsDimmer: Bool? {
         return false
@@ -71,13 +71,13 @@ extension PasteDisambiguationViewController: AFSModalOptionsProvider {
 
 // MARK: UICollectionViewDataSource
 
-extension PasteDisambiguationViewController: UICollectionViewDataSource {
+extension ChooseEmojiViewController: UICollectionViewDataSource {
     
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int) -> Int
     {
-        return pastedEmoji.count
+        return emoji.count
     }
     
     func collectionView(
@@ -85,7 +85,7 @@ extension PasteDisambiguationViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as! EmojiCell
-        cell.decorate(for: pastedEmoji[indexPath.item])
+        cell.decorate(for: emoji[indexPath.item])
         return cell
     }
     
@@ -93,7 +93,7 @@ extension PasteDisambiguationViewController: UICollectionViewDataSource {
 
 // MARK: UICollectionViewDelegateFlowLayout
 
-extension PasteDisambiguationViewController: UICollectionViewDelegateFlowLayout {
+extension ChooseEmojiViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         doneButton.isHidden = false

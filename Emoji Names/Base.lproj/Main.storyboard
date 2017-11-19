@@ -476,10 +476,10 @@
             </objects>
             <point key="canvasLocation" x="198" y="450"/>
         </scene>
-        <!--Paste Disambiguation View Controller-->
+        <!--Choose Emoji View Controller-->
         <scene sceneID="Cwt-1O-mDD">
             <objects>
-                <viewController storyboardIdentifier="Paste Disambiguation" id="B2c-s1-egH" customClass="PasteDisambiguationViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Paste Disambiguation" id="B2c-s1-egH" customClass="ChooseEmojiViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Lfw-8c-Yja"/>
                         <viewControllerLayoutGuide type="bottom" id="nb2-7i-ar8"/>

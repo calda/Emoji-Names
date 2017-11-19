@@ -397,7 +397,7 @@ class EmojiViewController: UIViewController {
             return
         }
         
-        let pastedEmoji = pastedString.filter { "\($0)".isEmoji }.map { "\($0)" }
+        let pastedEmoji = pastedString.filter { "\($0)".isEmoji }.map { "\($0)" }.removeDuplicates()
         
         guard pastedEmoji.count > 0 else {
             showPasteHelpAlert()
@@ -416,7 +416,7 @@ class EmojiViewController: UIViewController {
     }
     
     func showPasteDisambiguation(for pastedEmoji: [String]) {
-        PasteDisambiguationViewController.present(for:pastedEmoji, over: self)
+        ChooseEmojiViewController.present(for: pastedEmoji, over: self)
     }
     
 }
@@ -460,12 +460,12 @@ extension EmojiViewController: SettingsViewControllerDelegate {
     
 }
 
-// MARK: PasteDisambiguationViewControllerDelegate
+// MARK: ChooseEmojiViewControllerDelegate
 
-extension EmojiViewController: PasteDisambiguationViewControllerDelegate {
+extension EmojiViewController: ChooseEmojiViewControllerDelegate {
     
-    func pasteDisambiguationViewController(
-        _ viewController: PasteDisambiguationViewController,
+    func chooseEmojiViewController(
+        _ viewController: ChooseEmojiViewController,
         didSelectEmoji emoji: String)
     {
         self.changeToEmoji(emoji)
