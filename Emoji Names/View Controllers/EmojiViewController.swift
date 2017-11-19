@@ -412,13 +412,16 @@ class EmojiViewController: UIViewController {
     }
     
     private func showPasteHelpAlert() {
-        print("coming soon")
+        print("copy the Emoji and press it")
     }
     
     func showPasteDisambiguation(for pastedEmoji: [String]) {
         ChooseEmojiViewController.present(for: pastedEmoji, over: self)
     }
     
+    @IBAction func userTappedShareEmoji(_ sender: Any) {
+        print("coming soon")
+    }
 }
 
 // MARK: UIPopoverPresentationControllerDelegate
