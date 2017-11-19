@@ -13,10 +13,10 @@ import StoreKit
 class EmojiViewController: UIViewController {
     
     @IBOutlet weak var hiddenField: UITextField!
-    @IBOutlet weak var showKeyboardButton: UIButton!
     @IBOutlet weak var openKeyboardView: UIView!
     @IBOutlet weak var openKeyboardPosition: NSLayoutConstraint!
     @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var buttonBarBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var topBar: UIView!
     @IBOutlet weak var emojiView: UIView!
@@ -41,12 +41,11 @@ class EmojiViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name:. UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
         self.openKeyboardView.layer.masksToBounds = true
-        
-        showKeyboardButton.alpha = 0.0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,10 +54,6 @@ class EmojiViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         showKeyboard()
-        
-        UIView.animate(withDuration: 0.5, delay: 1.0, options: [], animations: {
-            self.showKeyboardButton.alpha = 1.0
-        }, completion: nil)
     }
     
     func setUpStatusBarView() {
@@ -106,7 +101,6 @@ class EmojiViewController: UIViewController {
     @IBAction func showKeyboard() { //called from app delegate or UIButton
         hiddenField.becomeFirstResponder()
         UIView.animate(withDuration: 0.3, animations: {
-            self.showKeyboardButton.alpha = 1.0
             self.updateContentHeight()
         })
     }
@@ -114,15 +108,15 @@ class EmojiViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if !hiddenField.isFirstResponder {
             showKeyboard()
-        }
+        }/* else {
+            hiddenField.resignFirstResponder()
+        }*/
     }
-    
-    var keyboardHidden = false
     
     @objc func keyboardChanged(_ notification: Notification) {
         guard let info = notification.userInfo,
             let value = info[UIKeyboardFrameEndUserInfoKey],
-            let rawFrame = (value as AnyObject).cgRectValue else
+            let rawFrame = value as? CGRect else
         {
             return
         }
@@ -135,21 +129,6 @@ class EmojiViewController: UIViewController {
         }
         
         updateContentHeight()
-        
-        if keyboardHidden {
-            UIView.animate(
-                withDuration: 0.5,
-                delay: 0.0,
-                usingSpringWithDamping: 1.0,
-                initialSpringVelocity: 0.0,
-                options: [],
-                animations: { self.view.layoutIfNeeded() })
-        } else {
-            self.view.layoutIfNeeded()
-        }
-        
-        keyboardHidden = false
-        
     }
     
     private var _preferredStatusBarStyle = UIStatusBarStyle.lightContent
@@ -191,9 +170,21 @@ class EmojiViewController: UIViewController {
     }
     
     func updateContentHeight(animate: Bool = true) {
+        //update button bar without animation
+        if let keyboardHeight = keyboardHeight {
+            buttonBarBottomConstraint.constant = keyboardHeight - view.safeAreaInsetsIfAvailable.bottom
+        } else {
+            buttonBarBottomConstraint.constant = 0
+        }
+        
+        self.view.layoutIfNeeded()
+        
+        //now update the content with an animation
         contentBottomConstraint.constant = keyboardHeight ?? 0
         
-        let animations = { self.view.layoutIfNeeded() }
+        let animations = {
+            self.view.layoutIfNeeded()
+        }
         
         if !animate {
             animations()
@@ -201,11 +192,9 @@ class EmojiViewController: UIViewController {
         }
         
         UIView.animate(
-            withDuration: 0.4,
+            withDuration: 0.3,
             delay: 0.0,
-            usingSpringWithDamping: 1.0,
-            initialSpringVelocity: 0.0,
-            options: [],
+            options: [.curveEaseInOut],
             animations: animations,
             completion: nil)
     }
@@ -232,11 +221,6 @@ class EmojiViewController: UIViewController {
             
             if emojiCount == 25 {
                 if #available(iOS 10.3, *) {
-                    showKeyboardButton.alpha = 0.0
-                    UIView.animate(withDuration: 1.5, delay: 1.5, animations: {
-                        self.showKeyboardButton.alpha = 1.0
-                    })
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(150)) {
                         self.hiddenField.resignFirstResponder()
                     }
@@ -268,10 +252,16 @@ class EmojiViewController: UIViewController {
         
         let (textColor, statusBarColor) = primaryColor.secondaryColorsForBackground
         emojiNameLabel.textColor = textColor
-        self.view.backgroundColor = primaryColor
         
         if animate {
             animateTransition(usesDifferentColors: !previousEmojiColor.approxEquals(primaryColor))
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                self.view.backgroundColor = primaryColor
+            })
+            
+        } else {
+            self.view.backgroundColor = primaryColor
         }
         
         _preferredStatusBarStyle = (statusBarColor.luma > 0.27) ? .default : .lightContent
