@@ -1,0 +1,4 @@
+framework module AdaptiveFormSheet {
+    header "AdaptiveFormSheet-Swift.h"
+    requires objc
+}
