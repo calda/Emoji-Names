@@ -10,6 +10,16 @@ import UIKit
 import Crashlytics
 import StoreKit
 
+// MARK: NSNoticationCenter+EmojiViewController
+
+extension Notification.Name {
+    static let emojiViewControllerWillChangeEmoji = Notification.Name("emojiViewControllerWillChangeEmoji")
+    static let keyboardHeightChangedNotificaitonReceived = Notification.Name("emojiViewControllerKeyboardHeightChanged")
+}
+
+
+// MARK: EmojiViewController
+
 class EmojiViewController: UIViewController {
     
     @IBOutlet weak var hiddenField: UITextField!
@@ -25,7 +35,17 @@ class EmojiViewController: UIViewController {
     @IBOutlet weak var previousEmojiImage: UIImageView!
     @IBOutlet weak var previousBackground: UIImageView!
     var previousEmojiColor = UIColor.clear
-    var keyboardHeight: CGFloat? = 0
+    
+    var keyboardHeight: CGFloat? = 0 {
+        didSet {
+            NotificationCenter.default.post(
+                name: .keyboardHeightChangedNotificaitonReceived,
+                object: nil,
+                userInfo: [
+                    "new height": (keyboardHeight ?? 0) as Any,
+                    "previous height": (oldValue ?? 0) as Any])
+        }
+    }
     
     var currentEmoji = "😀"
     
@@ -43,7 +63,6 @@ class EmojiViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name:. UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name: .UIKeyboardDidChangeFrame, object: nil)
         
         self.openKeyboardView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
         self.openKeyboardView.layer.cornerRadius = 20.0
@@ -238,6 +257,14 @@ class EmojiViewController: UIViewController {
     }
     
     func changeToEmoji(_ emoji: String, animate: Bool = true) {
+        
+        if currentEmoji != emoji {
+            NotificationCenter.default.post(
+                name: .emojiViewControllerWillChangeEmoji,
+                object: nil,
+                userInfo: ["old emoji": currentEmoji, "new emoji": emoji])
+        }
+        
         currentEmoji = emoji
         copyCurrentEmojiToImageView()
         
@@ -425,6 +452,10 @@ extension EmojiViewController: SettingsViewControllerDelegate {
         viewController.dismiss(animated: false, completion: nil)
         //play transition to new emoji style
         self.changeToEmoji(self.currentEmoji)
+    }
+    
+    func emojiToShowInSetingsViewController(_ viewController: SettingsViewController) -> String {
+        return currentEmoji
     }
     
 }

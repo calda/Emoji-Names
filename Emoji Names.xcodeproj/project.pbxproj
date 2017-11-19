@@ -11069,7 +11069,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/SVGKit.framework",
-					"$(PROJECT_DIR)/SVGKit-iOS.framework",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Emoji Names/Info.plist";
@@ -11098,7 +11097,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/SVGKit.framework",
-					"$(PROJECT_DIR)/SVGKit-iOS.framework",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Emoji Names/Info.plist";
