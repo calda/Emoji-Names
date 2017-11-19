@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        (window?.rootViewController as? ViewController)?.showKeyboard()
+        (window?.rootViewController as? EmojiViewController)?.showKeyboard()
     }
 
 }

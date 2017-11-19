@@ -10,7 +10,7 @@ import Foundation
 
 struct Setting {
     
-    static let preferredEmojiStyle = EnumSetting("preferredEmojiStyle", default: EmojiStyle.system)
+    static let preferredEmojiStyle = EnumSetting("preferredEmojiStyle", default: EmojiStyle.twitter)
     
     // MARK: Setting struct
     

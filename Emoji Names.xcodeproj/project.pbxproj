@@ -2674,7 +2674,7 @@
 		2E7BF9B61FBF8B620023EE1B /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7BF9B11FBF8B560023EE1B /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E81CA651FC0DCC500BAA268 /* EmojiStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */; };
 		2E81CA661FC0DCC500BAA268 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E81CA641FC0DCC400BAA268 /* Settings.swift */; };
-		2EF4CEDE1FB6BF5A005AA616 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CED31FB6BF5A005AA616 /* ViewController.swift */; };
+		2EF4CEDE1FB6BF5A005AA616 /* EmojiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */; };
 		2EF4CEDF1FB6BF5A005AA616 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CED41FB6BF5A005AA616 /* LaunchScreen.xib */; };
 		2EF4CEE01FB6BF5A005AA616 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CED61FB6BF5A005AA616 /* Main.storyboard */; };
 		2EF4CEE11FB6BF5A005AA616 /* CountryCodeLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CED81FB6BF5A005AA616 /* CountryCodeLookup.swift */; };
@@ -5367,7 +5367,7 @@
 		2E7BF9B11FBF8B560023EE1B /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = SVGKit.framework/CocoaLumberjack.framework; sourceTree = SOURCE_ROOT; };
 		2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiStyle.swift; sourceTree = "<group>"; };
 		2E81CA641FC0DCC400BAA268 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		2EF4CED31FB6BF5A005AA616 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiViewController.swift; sourceTree = "<group>"; };
 		2EF4CED51FB6BF5A005AA616 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		2EF4CED71FB6BF5A005AA616 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2EF4CED81FB6BF5A005AA616 /* CountryCodeLookup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryCodeLookup.swift; sourceTree = "<group>"; };
@@ -8064,20 +8064,44 @@
 			path = "twemoji 2.3";
 			sourceTree = SOURCE_ROOT;
 		};
+		2E9FA5D01FC1059D002CAA12 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2EF4CEDD1FB6BF5A005AA616 /* String+Emoji.swift */,
+				2EF4CED91FB6BF5A005AA616 /* UIImage+Color.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2E9FA5D11FC105B7002CAA12 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */,
+				2E81CA641FC0DCC400BAA268 /* Settings.swift */,
+				2EF4CED81FB6BF5A005AA616 /* CountryCodeLookup.swift */,
+				2EF4CEDB1FB6BF5A005AA616 /* AppDelegate.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		2E9FA5D21FC105D7002CAA12 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
 		2EF4CED21FB6BF5A005AA616 /* Emoji Names */ = {
 			isa = PBXGroup;
 			children = (
-				2E18CB431FBF776200CD5DFC /* twemoji 2.3 */,
-				2EF4CEDB1FB6BF5A005AA616 /* AppDelegate.swift */,
-				2EF4CED31FB6BF5A005AA616 /* ViewController.swift */,
-				2EF4CEDD1FB6BF5A005AA616 /* String+Emoji.swift */,
-				2EF4CED91FB6BF5A005AA616 /* UIImage+Color.swift */,
-				2EF4CED81FB6BF5A005AA616 /* CountryCodeLookup.swift */,
-				2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */,
-				2E81CA641FC0DCC400BAA268 /* Settings.swift */,
+				2E9FA5D21FC105D7002CAA12 /* View Controllers */,
+				2E9FA5D11FC105B7002CAA12 /* Utils */,
+				2E9FA5D01FC1059D002CAA12 /* Extensions */,
 				2EF4CED61FB6BF5A005AA616 /* Main.storyboard */,
 				2EF4CED41FB6BF5A005AA616 /* LaunchScreen.xib */,
 				2EF4CEDA1FB6BF5A005AA616 /* Images.xcassets */,
+				2E18CB431FBF776200CD5DFC /* twemoji 2.3 */,
 				2EF4CEDC1FB6BF5A005AA616 /* Info.plist */,
 				2E7BF9AF1FBF8B4F0023EE1B /* SVGKit.framework */,
 				2E7BF9B11FBF8B560023EE1B /* CocoaLumberjack.framework */,
@@ -10863,7 +10887,7 @@
 			files = (
 				2E81CA651FC0DCC500BAA268 /* EmojiStyle.swift in Sources */,
 				2EF4CEE41FB6BF5A005AA616 /* AppDelegate.swift in Sources */,
-				2EF4CEDE1FB6BF5A005AA616 /* ViewController.swift in Sources */,
+				2EF4CEDE1FB6BF5A005AA616 /* EmojiViewController.swift in Sources */,
 				2EF4CEE11FB6BF5A005AA616 /* CountryCodeLookup.swift in Sources */,
 				2E81CA661FC0DCC500BAA268 /* Settings.swift in Sources */,
 				2EF4CEE21FB6BF5A005AA616 /* UIImage+Color.swift in Sources */,

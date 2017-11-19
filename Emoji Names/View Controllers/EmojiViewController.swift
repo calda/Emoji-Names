@@ -1,16 +1,16 @@
 //
-//  ViewController.swift
-//  Emoji Playlist
+//  EmojiViewController.swift
+//  Emoji Names
 //
 //  Created by DFA Film 9: K-9 on 4/14/15.
 //  Copyright (c) 2015 Cal Stephens. All rights reserved.
 //
 
 import UIKit
-import StoreKit
 import Crashlytics
+import StoreKit
 
-class ViewController: UIViewController {
+class EmojiViewController: UIViewController {
     
     @IBOutlet weak var hiddenField: UITextField!
     @IBOutlet weak var showKeyboardButton: UIButton!
