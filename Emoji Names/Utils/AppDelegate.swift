@@ -20,8 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func applicationWillResignActive(_ application: UIApplication) {
+        (window?.rootViewController as? EmojiViewController)?.hiddenField?.resignFirstResponder()
+        (window?.rootViewController as? EmojiViewController)?.updateContentHeight(animate: false)
+    }
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
-        //(window?.rootViewController as? EmojiViewController)?.showKeyboard()
+        if (window?.rootViewController as? EmojiViewController)?.hiddenField.isFirstResponder == false {
+            (window?.rootViewController as? EmojiViewController)?.showKeyboard()
+        }
     }
 
 }

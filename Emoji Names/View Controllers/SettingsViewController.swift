@@ -64,8 +64,12 @@ class SettingsViewController: UIViewController {
     }
     
     @objc private func keyboardHeightChangedNotificaitonReceived(_ notification: Notification) {
-        dismiss(animated: false, completion: nil)
-        self.presentingViewController?.performSegue(withIdentifier: "emojiStylePopover", sender: popoverPresentationController?.sourceView)
+        dismiss(animated: false, completion: {
+            self.presentingViewController?.performSegue(
+                withIdentifier: "emojiStylePopover",
+                sender: self.popoverPresentationController?.sourceView)
+        })
+        
     }
     
     // MARK: User Interaction
