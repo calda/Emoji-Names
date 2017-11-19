@@ -234,11 +234,11 @@ class EmojiViewController: UIViewController {
             }
         }
         
-        currentEmoji = emoji
         changeToEmoji(emoji)
     }
     
     func changeToEmoji(_ emoji: String, animate: Bool = true) {
+        currentEmoji = emoji
         copyCurrentEmojiToImageView()
         
         Setting.preferredEmojiStyle.value.showEmoji(emoji, in: emojiLabel)
@@ -362,6 +362,36 @@ class EmojiViewController: UIViewController {
         emojiNameLabel.isHidden = false
     }
     
+    // MARK: User Interaction
+    
+    @IBAction func userTappedPasteEmoji() {
+        guard let pastedString = UIPasteboard.general.string else {
+            showPasteHelpAlert()
+            return
+        }
+        
+        let pastedEmoji = pastedString.filter { "\($0)".isEmoji }.map { "\($0)" }
+        
+        guard pastedEmoji.count > 0 else {
+            showPasteHelpAlert()
+            return
+        }
+        
+        if pastedEmoji.count == 1 {
+            changeToEmoji(pastedEmoji.first!)
+        } else {
+            showPasteDisambiguation(for: pastedEmoji)
+        }
+    }
+    
+    private func showPasteHelpAlert() {
+        print("coming soon")
+    }
+    
+    func showPasteDisambiguation(for pastedEmoji: [String]) {
+        PasteDisambiguationViewController.present(for:pastedEmoji, over: self)
+    }
+    
 }
 
 // MARK: UIPopoverPresentationControllerDelegate
@@ -393,9 +423,21 @@ extension EmojiViewController: SettingsViewControllerDelegate {
         didUpdateEmojiStyleTo emojiStyle: EmojiStyle)
     {
         viewController.dismiss(animated: false, completion: nil)
-        
         //play transition to new emoji style
         self.changeToEmoji(self.currentEmoji)
+    }
+    
+}
+
+// MARK: PasteDisambiguationViewControllerDelegate
+
+extension EmojiViewController: PasteDisambiguationViewControllerDelegate {
+    
+    func pasteDisambiguationViewController(
+        _ viewController: PasteDisambiguationViewController,
+        didSelectEmoji emoji: String)
+    {
+        self.changeToEmoji(emoji)
     }
     
 }

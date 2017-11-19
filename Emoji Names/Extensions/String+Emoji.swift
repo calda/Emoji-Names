@@ -15,7 +15,7 @@ extension String {
             return false
         }
         
-        let notEmoji = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+,./;'[]\\<>?:\"{}| "
+        let notEmoji = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+,./;'[]\\<>?:\"{}| \n\t\r"
         
         for character in self {
             if notEmoji.contains("\(character)".lowercased()) {

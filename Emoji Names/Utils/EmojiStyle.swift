@@ -16,6 +16,8 @@ enum EmojiStyle: String, EnumType {
     
     // MARK: emoji -> UIImage
     
+    private static var cachedVectors: [String: SVGKImage] = [:]
+    
     private func image(of emoji: String) -> UIImage {
         switch self {
         case .system:
@@ -41,6 +43,10 @@ enum EmojiStyle: String, EnumType {
         for emoji: String,
         ignoringVariationSelectors: Bool = false) -> SVGKImage?
     {
+        if let cachedVector = EmojiStyle.cachedVectors[emoji] {
+            return cachedVector
+        }
+        
         let codepointStrings = emoji.unicodeScalars.flatMap { scalar -> String? in
             let codepoint = scalar.value
             let hexString = String(format: "%x", codepoint)
@@ -77,7 +83,9 @@ enum EmojiStyle: String, EnumType {
             of: "d=\"M 0,0 36,0 36,36 0,36 0,0 Z\"",
             with: "d=\"M 0,0 45,0 45,45 0,45 0,0 Z\"")
         
-        return SVGKImage(data: correctedXml.data(using: .utf8))
+        let vector = SVGKImage(data: correctedXml.data(using: .utf8))
+        EmojiStyle.cachedVectors[emoji] = vector
+        return vector
     }
     
     private func generateImageWithSystemFont(
