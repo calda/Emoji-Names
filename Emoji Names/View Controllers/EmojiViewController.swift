@@ -27,6 +27,8 @@ class EmojiViewController: UIViewController {
     var previousEmojiColor = UIColor.clear
     var keyboardHeight: CGFloat? = 0
     
+    var currentEmoji = "😀"
+    
     // MARK: - Setup
     
     override func viewDidLoad() {
@@ -36,7 +38,7 @@ class EmojiViewController: UIViewController {
         addTextShadows()
         
         updateContentHeight(animate: false)
-        changeToEmoji("😀", animate: false)
+        changeToEmoji(currentEmoji, animate: false)
         emojiNameLabel.text = "Open the Emoji Keyboard and press an emoji"
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChanged(_:)), name:. UIKeyboardDidShow, object: nil)
@@ -93,7 +95,7 @@ class EmojiViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         view.layoutIfNeeded()
         updateContentHeight(animate: true)
-        changeToEmoji(emojiLabel.text ?? "😀", animate: false)
+        changeToEmoji(currentEmoji, animate: false)
     }
     
     //MARK: - Showing and Hiding the Keyboard
@@ -214,7 +216,7 @@ class EmojiViewController: UIViewController {
         }
         
         //track emoji count for rate alert
-        if emoji != self.emojiLabel.text {
+        if emoji != currentEmoji {
             
             let emojiCount = UserDefaults.standard.integer(forKey: "emojiCount")
             UserDefaults.standard.set(emojiCount + 1, forKey: "emojiCount")
@@ -232,6 +234,7 @@ class EmojiViewController: UIViewController {
             }
         }
         
+        currentEmoji = emoji
         changeToEmoji(emoji)
     }
     
@@ -296,7 +299,7 @@ class EmojiViewController: UIViewController {
             let animation = CABasicAnimation(keyPath: "transform.scale")
             animation.fromValue = 0.0
             animation.toValue = 1.0
-            animation.duration = 0.5
+            animation.duration = 0.6
             animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
             
             circle.add(animation, forKey: "scale")
@@ -318,7 +321,7 @@ class EmojiViewController: UIViewController {
         
         if !showCircularMask { emojiView.backgroundColor = UIColor.clear }
         
-        UIView.animate(withDuration: 0.7, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
+        UIView.animate(withDuration: 0.8, delay: 0.05, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
             self.emojiNameLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             self.emojiNameLabel.alpha = 1.0
             self.emojiLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
@@ -357,6 +360,42 @@ class EmojiViewController: UIViewController {
         
         emojiLabel.isHidden = false
         emojiNameLabel.isHidden = false
+    }
+    
+}
+
+// MARK: UIPopoverPresentationControllerDelegate
+
+extension EmojiViewController: UIPopoverPresentationControllerDelegate {
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if let settingsViewController = segue.destination as? SettingsViewController {
+            settingsViewController.delegate = self
+            segue.destination.popoverPresentationController?.delegate = self
+            segue.destination.popoverPresentationController?.permittedArrowDirections = [.down]
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+}
+
+// MARK: SettingsViewControllerDelegate
+
+extension EmojiViewController: SettingsViewControllerDelegate {
+    
+    func settingsViewController(
+        _ viewController: SettingsViewController,
+        didUpdateEmojiStyleTo emojiStyle: EmojiStyle)
+    {
+        viewController.dismiss(animated: false, completion: nil)
+        
+        //play transition to new emoji style
+        self.changeToEmoji(self.currentEmoji)
     }
     
 }
