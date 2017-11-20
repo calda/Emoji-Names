@@ -43,7 +43,7 @@ class SettingsViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self,
             selector: #selector(keyboardHeightChangedNotificaitonReceived(_:)),
-            name: .keyboardHeightChangedNotificaitonReceived,
+            name: .keyboardHeightChanged,
             object: nil)
     }
     

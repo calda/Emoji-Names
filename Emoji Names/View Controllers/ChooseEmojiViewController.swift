@@ -32,7 +32,7 @@ class ChooseEmojiViewController: AFSModalViewController {
     // MARK: Presentation
     
     static func present(for emoji: [String], over source: UIViewController) {
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Paste Disambiguation") as! ChooseEmojiViewController
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Choose Emoji") as! ChooseEmojiViewController
         
         if let delegate = source as? ChooseEmojiViewControllerDelegate {
             viewController.delegate = delegate

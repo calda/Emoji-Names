@@ -479,7 +479,7 @@
         <!--Choose Emoji View Controller-->
         <scene sceneID="Cwt-1O-mDD">
             <objects>
-                <viewController storyboardIdentifier="Paste Disambiguation" id="B2c-s1-egH" customClass="ChooseEmojiViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Choose Emoji" id="B2c-s1-egH" customClass="ChooseEmojiViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Lfw-8c-Yja"/>
                         <viewControllerLayoutGuide type="bottom" id="nb2-7i-ar8"/>
@@ -626,10 +626,101 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FG7-GL-vUX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="916.79999999999995" y="515.76354679802955"/>
+            <point key="canvasLocation" x="907" y="450"/>
+        </scene>
+        <!--Paste Help View Controller-->
+        <scene sceneID="BLn-a6-Lkf">
+            <objects>
+                <viewController storyboardIdentifier="Paste Help" id="I5e-D3-1OC" customClass="PasteHelpViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="b1x-4w-Wdc"/>
+                        <viewControllerLayoutGuide type="bottom" id="oGN-df-T3N"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="s8T-Il-GPl">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="N1D-nO-j6U">
+                                <rect key="frame" x="20" y="25" width="260" height="278.66666666666669"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ca6-qC-aaQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="260" height="141.66666666666666"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Paste Emoji" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Doy-qg-jf9">
+                                                <rect key="frame" x="0.0" y="0.0" width="260" height="30"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="alF-lq-g9e">
+                                                <rect key="frame" x="0.0" y="40.000000000000007" width="260" height="101.66666666666669"/>
+                                                <string key="text">Your clipboard doesn't contain any emoji. \n\nIf you copy a message from another app and paste it here, Emoji Names will show you the name of each emoji.</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Copy Message - System" translatesAutoresizingMaskIntoConstraints="NO" id="ZSi-gb-L1z">
+                                        <rect key="frame" x="21" y="141.66666666666666" width="218" height="136.99999999999997"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="ca6-qC-aaQ" firstAttribute="width" secondItem="N1D-nO-j6U" secondAttribute="width" id="qJu-9x-OeP"/>
+                                </constraints>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="zdd-36-osf">
+                                <rect key="frame" x="0.0" y="350" width="300" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2CC-5s-QGt">
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="50"/>
+                                        <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="userTappedDone" destination="I5e-D3-1OC" eventType="touchUpInside" id="4df-q5-86j"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="sjw-wD-tEO"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="zdd-36-osf" secondAttribute="bottom" id="1eV-Bd-zYQ"/>
+                            <constraint firstAttribute="trailing" secondItem="zdd-36-osf" secondAttribute="trailing" id="Vm9-4F-sgD"/>
+                            <constraint firstAttribute="trailing" secondItem="N1D-nO-j6U" secondAttribute="trailing" constant="20" id="XUO-CB-AEF"/>
+                            <constraint firstItem="N1D-nO-j6U" firstAttribute="leading" secondItem="s8T-Il-GPl" secondAttribute="leading" constant="20" id="lcI-d8-bQ1"/>
+                            <constraint firstItem="zdd-36-osf" firstAttribute="leading" secondItem="s8T-Il-GPl" secondAttribute="leading" id="qO1-iQ-Blh"/>
+                            <constraint firstItem="N1D-nO-j6U" firstAttribute="top" secondItem="s8T-Il-GPl" secondAttribute="top" constant="25" id="u4J-oZ-vLp"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="15"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="300" height="400"/>
+                    <connections>
+                        <outlet property="bodyText" destination="alF-lq-g9e" id="XmR-kl-ofE"/>
+                        <outlet property="imageView" destination="ZSi-gb-L1z" id="MJr-8M-ODi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="miO-NP-U3O" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1557" y="450"/>
         </scene>
     </scenes>
     <resources>
-        <image name="settings" width="100" height="100"/>
+        <image name="Copy Message - System" width="218" height="137"/>
+        <image name="settings" width="44" height="44"/>
     </resources>
 </document>

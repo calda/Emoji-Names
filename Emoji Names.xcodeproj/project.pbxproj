@@ -2684,6 +2684,7 @@
 		2E81CA661FC0DCC500BAA268 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E81CA641FC0DCC400BAA268 /* Settings.swift */; };
 		2E9FA6621FC1241E002CAA12 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EF4CEE71FB6BF77005AA616 /* Crashlytics.framework */; };
 		2ECD74E51FC2014800BBE334 /* Array+RemoveDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECD74E41FC2014800BBE334 /* Array+RemoveDuplicates.swift */; };
+		2ECD74E71FC2928200BBE334 /* PasteHelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECD74E61FC2928200BBE334 /* PasteHelpViewController.swift */; };
 		2EF4CEDE1FB6BF5A005AA616 /* EmojiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */; };
 		2EF4CEDF1FB6BF5A005AA616 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CED41FB6BF5A005AA616 /* LaunchScreen.xib */; };
 		2EF4CEE01FB6BF5A005AA616 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EF4CED61FB6BF5A005AA616 /* Main.storyboard */; };
@@ -5391,6 +5392,7 @@
 		2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiStyle.swift; sourceTree = "<group>"; };
 		2E81CA641FC0DCC400BAA268 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2ECD74E41FC2014800BBE334 /* Array+RemoveDuplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+RemoveDuplicates.swift"; sourceTree = "<group>"; };
+		2ECD74E61FC2928200BBE334 /* PasteHelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteHelpViewController.swift; sourceTree = "<group>"; };
 		2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmojiViewController.swift; sourceTree = "<group>"; };
 		2EF4CED51FB6BF5A005AA616 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		2EF4CED71FB6BF5A005AA616 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -8120,6 +8122,7 @@
 				2EF4CED31FB6BF5A005AA616 /* EmojiViewController.swift */,
 				2E7DA71F1FC132160001D9D8 /* SettingsViewController.swift */,
 				2E7DA7211FC148F90001D9D8 /* ChooseEmojiViewController.swift */,
+				2ECD74E61FC2928200BBE334 /* PasteHelpViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -10928,6 +10931,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E7DA71A1FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift in Sources */,
+				2ECD74E71FC2928200BBE334 /* PasteHelpViewController.swift in Sources */,
 				2E81CA651FC0DCC500BAA268 /* EmojiStyle.swift in Sources */,
 				2EF4CEE41FB6BF5A005AA616 /* AppDelegate.swift in Sources */,
 				2EF4CEDE1FB6BF5A005AA616 /* EmojiViewController.swift in Sources */,

@@ -14,7 +14,7 @@ import StoreKit
 
 extension Notification.Name {
     static let emojiViewControllerWillChangeEmoji = Notification.Name("emojiViewControllerWillChangeEmoji")
-    static let keyboardHeightChangedNotificaitonReceived = Notification.Name("emojiViewControllerKeyboardHeightChanged")
+    static let keyboardHeightChanged = Notification.Name("emojiViewControllerKeyboardHeightChanged")
 }
 
 
@@ -39,7 +39,7 @@ class EmojiViewController: UIViewController {
     var keyboardHeight: CGFloat? = 0 {
         didSet {
             NotificationCenter.default.post(
-                name: .keyboardHeightChangedNotificaitonReceived,
+                name: .keyboardHeightChanged,
                 object: nil,
                 userInfo: [
                     "new height": (keyboardHeight ?? 0) as Any,
@@ -412,7 +412,7 @@ class EmojiViewController: UIViewController {
     }
     
     private func showPasteHelpAlert() {
-        print("coming soon")
+        PasteHelpViewController.present(over: self)
     }
     
     func showPasteDisambiguation(for pastedEmoji: [String]) {
