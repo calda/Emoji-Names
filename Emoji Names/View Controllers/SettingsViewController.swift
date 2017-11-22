@@ -29,7 +29,6 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .clear
-        
         updateSelection(to: Setting.preferredEmojiStyle.value)
         
         let emoji = delegate?.emojiToShowInSetingsViewController(self) ?? "😉"
@@ -64,18 +63,16 @@ class SettingsViewController: UIViewController {
     }
     
     @objc private func keyboardHeightChangedNotificaitonReceived(_ notification: Notification) {
-        dismiss(animated: false, completion: {
-            self.presentingViewController?.performSegue(
-                withIdentifier: "emojiStylePopover",
-                sender: self.popoverPresentationController?.sourceView)
-        })
-        
+        dismiss(animated: false)
+        self.presentingViewController?.performSegue(
+            withIdentifier: "emojiStylePopover",
+            sender: self.popoverPresentationController?.sourceView)
     }
     
     // MARK: User Interaction
     
     func updateSelection(to emojiStyle: EmojiStyle?) {
-        let selected = UIColor(white: 1.0, alpha: 0.65)
+        let selected = UIColor(white: 1.0, alpha: 0.85)
         systemSelectionView.backgroundColor = (emojiStyle == .system) ? selected : .clear
         twitterSelectionView.backgroundColor = (emojiStyle == .twitter) ? selected : .clear
     }

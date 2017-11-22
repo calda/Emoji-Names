@@ -41,11 +41,22 @@ class PasteHelpViewController: AFSModalViewController {
             selector: #selector(appDidEnterBackgroundNotificationReceived),
             name: .appDidEnterBackground,
             object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboardHeightDidChange(_:)),
+            name: .keyboardHeightChanged,
+            object: nil)
     
     }
     
     @objc func appDidEnterBackgroundNotificationReceived() {
         dismiss(animated: false, completion: nil)
+    }
+    
+    @objc func keyboardHeightDidChange(_ notification: Notification) {
+        if (notification.userInfo?["new height"] as? Int) != 0 {
+            dismiss(animated: true)
+        }
     }
     
     // MARK: User Interaction
