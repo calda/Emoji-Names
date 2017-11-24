@@ -212,7 +212,7 @@
                                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LFa-u7-j4c">
                                                                 <rect key="frame" x="0.6666666666666714" y="0.0" width="145.66666666666663" height="44"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hLU-LI-9bv">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="145" height="44"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="145.66666666666663" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 </view>
                                                                 <blurEffect style="extraLight"/>
@@ -252,7 +252,7 @@
                                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3NN-Wa-mF8">
                                                                 <rect key="frame" x="0.0" y="0.0" width="145.33333333333334" height="44"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="eFa-Tz-V4p">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="145" height="44"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="145.33333333333334" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 </view>
                                                                 <blurEffect style="extraLight"/>
@@ -933,17 +933,95 @@
                     <connections>
                         <outlet property="colorButtonLabel" destination="uaz-WH-bYW" id="N6k-eN-15I"/>
                         <outlet property="colorButtonView" destination="lKt-c3-m7Y" id="dR3-IT-q4K"/>
+                        <outlet property="emojiBackgroundExtensionView" destination="LIL-tm-l5Z" id="2kA-TD-Qam"/>
+                        <outlet property="emojiBackgroundView" destination="Fsc-Oz-2lE" id="sja-ve-Onc"/>
                         <outlet property="emojiLabel" destination="fCa-9s-QlF" id="R49-GD-PrB"/>
                         <outlet property="emojiNameLabel" destination="3jG-7E-QKH" id="SC2-pf-Okj"/>
                         <outlet property="nameButtonLabel" destination="UzL-er-kGw" id="aDo-hX-4lS"/>
                         <outlet property="nameButtonView" destination="65J-hf-RxZ" id="kLc-Ac-AFN"/>
                         <outlet property="styleButtonLabel" destination="3wU-yT-hD6" id="d0u-b7-poT"/>
                         <outlet property="styleButtonView" destination="sj0-XX-6rI" id="lxz-Aw-Abc"/>
+                        <segue destination="3ZU-LG-BoX" kind="popoverPresentation" identifier="color popover" popoverAnchorView="lKt-c3-m7Y" id="Oi3-as-ALK">
+                            <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4oz-J3-fxf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1650" y="468"/>
+        </scene>
+        <!--Color Picker View Controller-->
+        <scene sceneID="ub6-Vv-oXU">
+            <objects>
+                <viewController id="3ZU-LG-BoX" customClass="ColorPickerViewController" customModule="Emoji_Names" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KED-XA-ajS"/>
+                        <viewControllerLayoutGuide type="bottom" id="QtA-Vf-404"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mRC-ox-R3O">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8vQ-aV-y97">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
+                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="YqD-bC-EML">
+                                    <size key="itemSize" width="43" height="43"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="25" minY="25" maxX="25" maxY="25"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swatch" id="8q5-Po-tBw" customClass="SwatchCell" customModule="Emoji_Names" customModuleProvider="target">
+                                        <rect key="frame" x="25" y="25" width="43" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H3k-kr-eXE">
+                                                    <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                                    <color key="backgroundColor" red="0.67976888020000004" green="0.14364690690000001" blue="0.1525822731" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <real key="value" value="21.5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="H3k-kr-eXE" secondAttribute="trailing" id="MtA-B1-nVb"/>
+                                            <constraint firstItem="H3k-kr-eXE" firstAttribute="leading" secondItem="8q5-Po-tBw" secondAttribute="leading" id="lX9-AQ-ObI"/>
+                                            <constraint firstItem="H3k-kr-eXE" firstAttribute="top" secondItem="8q5-Po-tBw" secondAttribute="top" id="lcf-76-FgW"/>
+                                            <constraint firstAttribute="bottom" secondItem="H3k-kr-eXE" secondAttribute="bottom" id="zAq-tu-s8L"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="swatchView" destination="H3k-kr-eXE" id="o06-y4-C6b"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="3ZU-LG-BoX" id="128-mx-gdh"/>
+                                    <outlet property="delegate" destination="3ZU-LG-BoX" id="Bno-Sh-IRf"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.950927734375" green="0.950927734375" blue="0.950927734375" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="8vQ-aV-y97" secondAttribute="trailing" id="Dfw-Xa-RZG"/>
+                            <constraint firstItem="8vQ-aV-y97" firstAttribute="top" secondItem="mRC-ox-R3O" secondAttribute="top" id="Qnk-LM-72a"/>
+                            <constraint firstAttribute="bottom" secondItem="8vQ-aV-y97" secondAttribute="bottom" id="cL6-aO-N4B"/>
+                            <constraint firstItem="8vQ-aV-y97" firstAttribute="leading" secondItem="mRC-ox-R3O" secondAttribute="leading" id="gcC-QM-emd"/>
+                        </constraints>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="200" height="300"/>
+                    <size key="freeformSize" width="200" height="300"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Y9-EU-axd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2244.8000000000002" y="467.73399014778329"/>
         </scene>
     </scenes>
     <resources>

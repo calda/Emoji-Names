@@ -12,6 +12,8 @@ class ShareImageViewController: UIViewController {
     
     @IBOutlet weak var emojiLabel: UILabel!
     @IBOutlet weak var emojiNameLabel: UILabel!
+    @IBOutlet weak var emojiBackgroundView: UIView!
+    @IBOutlet weak var emojiBackgroundExtensionView: UIView!
     
     @IBOutlet weak var colorButtonView: UIView!
     @IBOutlet weak var nameButtonView: UIView!
@@ -22,7 +24,7 @@ class ShareImageViewController: UIViewController {
     @IBOutlet weak var styleButtonLabel: UILabel!
     
     var emoji: String!
-    var backgroundColor: UIColor!
+    var backgroundColor: UIColor?
     var emojiStyle: EmojiStyle!
     var showingName = true
     
@@ -31,7 +33,6 @@ class ShareImageViewController: UIViewController {
     static func present(for emoji: String, over source: UIViewController) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Share Image") as! ShareImageViewController
         viewController.emoji = emoji
-        viewController.backgroundColor = Setting.preferredEmojiStyle.value.backgroundColor(for: emoji)
         viewController.emojiStyle = Setting.preferredEmojiStyle.value
         source.present(viewController, animated: true)
     }
@@ -66,16 +67,24 @@ class ShareImageViewController: UIViewController {
             buttonView.layer.shadowColor = UIColor.black.cgColor
             buttonView.layer.shadowOffset = CGSize(width: 0, height: 1)
             buttonView.layer.shadowRadius = 2
-            buttonView.layer.shadowOpacity = 0.09
+            buttonView.layer.shadowOpacity = 0.11
         }
     }
     
-    // MARK: Configuration
+    // MARK: Presenting
     
     func updateEmojiView() {
         emojiStyle.showEmoji(emoji, in: emojiLabel)
         emojiNameLabel.text = emoji.emojiName
         emojiNameLabel.isHidden = !showingName
+        
+        let backgroundColor = self.backgroundColor
+            ?? emojiStyle.backgroundColor(for: emoji)
+        
+        emojiBackgroundView.backgroundColor = backgroundColor
+        emojiBackgroundExtensionView.backgroundColor = backgroundColor
+        
+        emojiNameLabel.textColor = backgroundColor.secondaryColorsForBackground.text
     }
     
     func updateButtonLabels() {
@@ -93,7 +102,7 @@ class ShareImageViewController: UIViewController {
             options: [.curveEaseInOut],
             animations: {
                 buttonView.transform = selected ? CGAffineTransform(scaleX: 1.15, y: 1.15) : .identity
-                buttonView.backgroundColor = selected ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.98, green: 0.98, blue: 0.98, alpha: 1)
+                buttonView.backgroundColor = selected ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
         })
     }
     
@@ -134,7 +143,7 @@ class ShareImageViewController: UIViewController {
     }
     
     private func colorButtonTapped() {
-        //coming soon
+        performSegue(withIdentifier: "color popover", sender: nil)
     }
     
     private func nameButtonTapped() {
@@ -153,6 +162,48 @@ class ShareImageViewController: UIViewController {
             guard let view = view else { return }
             UIView.transition(with: view, duration: 0.35, options: [.transitionFlipFromRight], animations: {})
         }
+    }
+    
+}
+
+// MARK: UIPopoverPresentationControllerDelegate
+
+extension ShareImageViewController: UIPopoverPresentationControllerDelegate {
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if let colorPicker = segue.destination as? ColorPickerViewController {
+            colorPicker.popoverPresentationController?.delegate = self
+            colorPicker.delegate = self
+            colorPicker.defaultColor = emojiStyle.backgroundColor(for: emoji)
+            
+            if let sourceBounds = colorPicker.popoverPresentationController?.sourceView?.bounds {
+                colorPicker.popoverPresentationController?.sourceRect = sourceBounds
+            }
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+}
+
+// MARK: ColorPickerViewControllerDelegate
+
+extension ShareImageViewController: ColorPickerViewControllerDelegate {
+    
+    func colorPicker(_ viewController: ColorPickerViewController, didSelectColor color: UIColor) {
+        backgroundColor = color
+        updateEmojiView()
+        viewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func colorPickerDidSelectReset(_ viewController: ColorPickerViewController) {
+        backgroundColor = nil
+        updateEmojiView()
+        viewController.dismiss(animated: true, completion: nil)
     }
     
 }
