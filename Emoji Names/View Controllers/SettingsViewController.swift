@@ -78,6 +78,10 @@ class SettingsViewController: UIViewController {
     }
     
     func commitSelection(of emojiStyle: EmojiStyle) {
+        guard Setting.preferredEmojiStyle.value != emojiStyle else {
+            return
+        }
+        
         Setting.preferredEmojiStyle.update(to: emojiStyle)
         delegate?.settingsViewController(self, didUpdateEmojiStyleTo: emojiStyle)
     }

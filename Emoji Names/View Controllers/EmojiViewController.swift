@@ -415,8 +415,12 @@ class EmojiViewController: UIViewController {
         PasteHelpViewController.present(over: self)
     }
     
-    func showPasteDisambiguation(for pastedEmoji: [String]) {
+    private func showPasteDisambiguation(for pastedEmoji: [String]) {
         ChooseEmojiViewController.present(for: pastedEmoji, over: self)
+    }
+    
+    @IBAction func userTappedShareEmoji() {
+        ShareImageViewController.present(for: currentEmoji, over: self)
     }
     
 }
