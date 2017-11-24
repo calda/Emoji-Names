@@ -31,10 +31,11 @@ class ShareImageViewController: UIViewController {
     // MARK: Present
     
     static func present(for emoji: String, over source: UIViewController) {
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Share Image") as! ShareImageViewController
+        let navigation = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Share Image Navigation") as! UINavigationController
+        let viewController = navigation.viewControllers.first as! ShareImageViewController
         viewController.emoji = emoji
         viewController.emojiStyle = Setting.preferredEmojiStyle.value
-        source.present(viewController, animated: true)
+        source.present(navigation, animated: true)
     }
     
     // MARK: Setup
@@ -67,7 +68,7 @@ class ShareImageViewController: UIViewController {
             buttonView.layer.shadowColor = UIColor.black.cgColor
             buttonView.layer.shadowOffset = CGSize(width: 0, height: 1)
             buttonView.layer.shadowRadius = 2
-            buttonView.layer.shadowOpacity = 0.11
+            buttonView.layer.shadowOpacity = 0.075
         }
     }
     
@@ -102,7 +103,6 @@ class ShareImageViewController: UIViewController {
             options: [.curveEaseInOut],
             animations: {
                 buttonView.transform = selected ? CGAffineTransform(scaleX: 1.15, y: 1.15) : .identity
-                buttonView.backgroundColor = selected ? #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : #colorLiteral(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
         })
     }
     
@@ -150,6 +150,8 @@ class ShareImageViewController: UIViewController {
         showingName = !showingName
         updateButtonLabels()
         updateEmojiView()
+        
+        UIView.transition(with: nameButtonLabel, duration: 0.35, options: [.transitionFlipFromRight], animations: {})
     }
     
     private func styleButtonTapped() {
@@ -164,6 +166,18 @@ class ShareImageViewController: UIViewController {
         }
     }
     
+    @IBAction func doneButtonTapped() {
+        navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func shareButtonTapped() {
+        var image = emojiBackgroundView.asImage
+        if !showingName { image = image.cropped(percentage: 0.55) }
+        
+        let shareSheet = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        shareSheet.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(shareSheet, animated: true, completion: nil)
+    }
 }
 
 // MARK: UIPopoverPresentationControllerDelegate
@@ -204,6 +218,46 @@ extension ShareImageViewController: ColorPickerViewControllerDelegate {
         backgroundColor = nil
         updateEmojiView()
         viewController.dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+// MARK: Extensions
+
+extension UIView {
+    
+    var asImage: UIImage {
+        let previousAlpha = self.alpha
+        self.alpha = 1.0
+        
+        let deviceScale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, deviceScale)
+        
+        let context = UIGraphicsGetCurrentContext()!
+        self.layer.render(in: context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        UIGraphicsEndImageContext()
+        self.alpha = previousAlpha
+        return image
+    }
+    
+}
+
+extension UIImage {
+    
+    func cropped(percentage: CGFloat) -> UIImage {
+        let deviceScale = UIScreen.main.scale
+        let newSize = CGSize(width: size.width * percentage, height: size.height * percentage)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, deviceScale)
+        
+        draw(at: CGPoint(
+            x: -(size.width * (1 - percentage))/2,
+            y: -(size.height * (1 - percentage))/2))
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return image
     }
     
 }
