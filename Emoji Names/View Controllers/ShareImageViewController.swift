@@ -32,6 +32,8 @@ class ShareImageViewController: UIViewController {
     
     static func present(for emoji: String, over source: UIViewController) {
         let navigation = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Share Image Navigation") as! UINavigationController
+        navigation.modalPresentationStyle = .formSheet
+        
         let viewController = navigation.viewControllers.first as! ShareImageViewController
         viewController.emoji = emoji
         viewController.emojiStyle = Setting.preferredEmojiStyle.value
@@ -42,9 +44,13 @@ class ShareImageViewController: UIViewController {
     
     override func viewDidLoad() {
         addTextShadows()
-        addButtonShadows()
         updateEmojiView()
         updateButtonLabels()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        view.layoutIfNeeded()
+        updateButtonShadows()
     }
     
     func addTextShadows() {
@@ -59,7 +65,7 @@ class ShareImageViewController: UIViewController {
         emojiNameLabel.layer.shadowOffset = CGSize(width: 1, height: 1)
     }
     
-    func addButtonShadows() {
+    func updateButtonShadows() {
         [colorButtonView, nameButtonView, styleButtonView].forEach { buttonView in
             guard let buttonView = buttonView else { return }
             
@@ -70,6 +76,11 @@ class ShareImageViewController: UIViewController {
             buttonView.layer.shadowRadius = 2
             buttonView.layer.shadowOpacity = 0.075
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateButtonShadows()
     }
     
     // MARK: Presenting

@@ -120,6 +120,8 @@ class EmojiViewController: UIViewController {
     //MARK: - Showing and Hiding the Keyboard
     
     @IBAction func showKeyboard() { //called from app delegate or UIButton
+        guard presentedViewController == nil else { return }
+        
         hiddenField.becomeFirstResponder()
         UIView.animate(withDuration: 0.3, animations: {
             self.updateContentHeight()
@@ -294,7 +296,7 @@ class EmojiViewController: UIViewController {
             self.view.backgroundColor = primaryColor
         }
         
-        _preferredStatusBarStyle = (statusBarColor.luma > 0.27) ? .default : .lightContent
+        _preferredStatusBarStyle = (statusBarColor.luma > 0.2) ? .default : .lightContent
         UIView.animate(withDuration: 0.2, animations: {
             self.setNeedsStatusBarAppearanceUpdate()
         })
@@ -436,6 +438,10 @@ extension EmojiViewController: UIPopoverPresentationControllerDelegate {
             settingsViewController.delegate = self
             segue.destination.popoverPresentationController?.delegate = self
             segue.destination.popoverPresentationController?.permittedArrowDirections = [.down]
+            
+            if let sourceView = segue.destination.popoverPresentationController?.sourceView {
+                segue.destination.popoverPresentationController?.sourceRect = sourceView.bounds
+            }
         }
     }
     

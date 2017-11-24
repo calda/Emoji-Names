@@ -2668,6 +2668,7 @@
 		2E18E00B1FBF778300CD5DFC /* 2195.svg in Resources */ = {isa = PBXBuildFile; fileRef = 2E18D5A61FBF777D00CD5DFC /* 2195.svg */; };
 		2E18E00C1FBF778300CD5DFC /* 1f466-1f3fe.svg in Resources */ = {isa = PBXBuildFile; fileRef = 2E18D5A71FBF777D00CD5DFC /* 1f466-1f3fe.svg */; };
 		2E18E00D1FBF778300CD5DFC /* 26f7-1f3ff.svg in Resources */ = {isa = PBXBuildFile; fileRef = 2E18D5A81FBF777D00CD5DFC /* 26f7-1f3ff.svg */; };
+		2E37A7981FC8D909003BE23C /* ForwardingNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E37A7971FC8D909003BE23C /* ForwardingNavigationController.swift */; };
 		2E7DA7111FC1292B0001D9D8 /* SVGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; };
 		2E7DA7131FC129360001D9D8 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */; };
 		2E7DA7141FC129470001D9D8 /* SVGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; };
@@ -5385,6 +5386,7 @@
 		2E18D5A61FBF777D00CD5DFC /* 2195.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2195.svg; sourceTree = "<group>"; };
 		2E18D5A71FBF777D00CD5DFC /* 1f466-1f3fe.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "1f466-1f3fe.svg"; sourceTree = "<group>"; };
 		2E18D5A81FBF777D00CD5DFC /* 26f7-1f3ff.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "26f7-1f3ff.svg"; sourceTree = "<group>"; };
+		2E37A7971FC8D909003BE23C /* ForwardingNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardingNavigationController.swift; sourceTree = "<group>"; };
 		2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SVGKit.framework; sourceTree = SOURCE_ROOT; };
 		2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = SVGKit.framework/CocoaLumberjack.framework; sourceTree = SOURCE_ROOT; };
 		2E7DA7191FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+SafeAreaInsets.swift"; sourceTree = "<group>"; };
@@ -8129,6 +8131,7 @@
 				2ECD74E61FC2928200BBE334 /* PasteHelpViewController.swift */,
 				2EABC3041FC7B97200B67747 /* ShareImageViewController.swift */,
 				2EABC3071FC7DEDF00B67747 /* ColorPickerViewController.swift */,
+				2E37A7971FC8D909003BE23C /* ForwardingNavigationController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -10936,6 +10939,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E37A7981FC8D909003BE23C /* ForwardingNavigationController.swift in Sources */,
 				2EABC3061FC7BD4700B67747 /* ShareImageViewController.swift in Sources */,
 				2E7DA71A1FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift in Sources */,
 				2ECD74E71FC2928200BBE334 /* PasteHelpViewController.swift in Sources */,
