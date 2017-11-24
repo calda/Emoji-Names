@@ -273,11 +273,7 @@ class EmojiViewController: UIViewController {
         Setting.preferredEmojiStyle.value.showEmoji(emoji, in: emojiLabel)
         emojiNameLabel.text = emoji.emojiName
         
-        Answers.logCustomEvent(
-            withName: "Emoji Viewed",
-            customAttributes: [
-                "Emoji": emoji,
-                "Emoji Name": emoji.emojiName])
+        Event.emojiViewed(emoji).record()
         
         let primaryColor = Setting.preferredEmojiStyle.value.backgroundColor(for: emoji)
         emojiView.backgroundColor = primaryColor
@@ -401,6 +397,8 @@ class EmojiViewController: UIViewController {
         
         let pastedEmoji = pastedString.filter { "\($0)".isEmoji }.map { "\($0)" }.removeDuplicates()
         
+        Event.textPasted(emojiCount: pastedEmoji.count).record()
+        
         guard pastedEmoji.count > 0 else {
             showPasteHelpAlert()
             return
@@ -408,6 +406,7 @@ class EmojiViewController: UIViewController {
         
         if pastedEmoji.count == 1 {
             changeToEmoji(pastedEmoji.first!)
+            Event.emojiPasted(pastedEmoji.first!).record()
         } else {
             showPasteDisambiguation(for: pastedEmoji)
         }
@@ -422,6 +421,7 @@ class EmojiViewController: UIViewController {
     }
     
     @IBAction func userTappedShareEmoji() {
+        Event.shareEmojiTapped(emoji: currentEmoji).record()
         ShareImageViewController.present(for: currentEmoji, over: self)
     }
     
@@ -462,6 +462,7 @@ extension EmojiViewController: SettingsViewControllerDelegate {
         viewController.dismiss(animated: false, completion: nil)
         //play transition to new emoji style
         self.changeToEmoji(self.currentEmoji)
+        Event.emojiStyleUpdated(emojiStyle).record()
     }
     
     func emojiToShowInSetingsViewController(_ viewController: SettingsViewController) -> String {
@@ -479,6 +480,7 @@ extension EmojiViewController: ChooseEmojiViewControllerDelegate {
         didSelectEmoji emoji: String)
     {
         self.changeToEmoji(emoji)
+        Event.emojiPasted(emoji).record()
     }
     
 }

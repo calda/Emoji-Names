@@ -158,6 +158,7 @@ class ShareImageViewController: UIViewController {
     }
     
     private func nameButtonTapped() {
+        Event.imageEmojiNameToggled.record()
         showingName = !showingName
         updateButtonLabels()
         updateEmojiView()
@@ -166,6 +167,7 @@ class ShareImageViewController: UIViewController {
     }
     
     private func styleButtonTapped() {
+        Event.imageEmojiStyleToggled.record()
         emojiStyle = (emojiStyle == .system) ? .twitter : .system
         
         self.updateEmojiView()
@@ -182,6 +184,8 @@ class ShareImageViewController: UIViewController {
     }
     
     @IBAction func shareButtonTapped() {
+        Event.imageShared(emoji: emoji, hasCustomColor: (backgroundColor != nil), showingName: showingName, style: emojiStyle).record()
+        
         var image = emojiBackgroundView.asImage
         if !showingName { image = image.cropped(percentage: 0.55) }
         
@@ -220,12 +224,14 @@ extension ShareImageViewController: UIPopoverPresentationControllerDelegate {
 extension ShareImageViewController: ColorPickerViewControllerDelegate {
     
     func colorPicker(_ viewController: ColorPickerViewController, didSelectColor color: UIColor) {
+        Event.imageColorChanged.record()
         backgroundColor = color
         updateEmojiView()
         viewController.dismiss(animated: true, completion: nil)
     }
     
     func colorPickerDidSelectReset(_ viewController: ColorPickerViewController) {
+        Event.imageColorChanged.record()
         backgroundColor = nil
         updateEmojiView()
         viewController.dismiss(animated: true, completion: nil)

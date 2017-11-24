@@ -14,6 +14,13 @@ enum EmojiStyle: String, EnumType {
     case system
     case twitter
     
+    var stringValue: String {
+        switch self {
+        case .system: return "System"
+        case .twitter: return "Twitter"
+        }
+    }
+    
     // MARK: emoji -> UIImage
     
     private static var cachedVectors: [String: SVGKImage] = [:]
