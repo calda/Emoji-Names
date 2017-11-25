@@ -2670,16 +2670,14 @@
 		2E18E00D1FBF778300CD5DFC /* 26f7-1f3ff.svg in Resources */ = {isa = PBXBuildFile; fileRef = 2E18D5A81FBF777D00CD5DFC /* 26f7-1f3ff.svg */; };
 		2E37A7981FC8D909003BE23C /* ForwardingNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E37A7971FC8D909003BE23C /* ForwardingNavigationController.swift */; };
 		2E37A79A1FC8DC9F003BE23C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E37A7991FC8DC9F003BE23C /* Event.swift */; };
-		2E7DA7111FC1292B0001D9D8 /* SVGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; };
-		2E7DA7131FC129360001D9D8 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */; };
-		2E7DA7141FC129470001D9D8 /* SVGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; };
-		2E7DA7151FC129470001D9D8 /* SVGKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E7DA7161FC129470001D9D8 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */; };
-		2E7DA7171FC129470001D9D8 /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E37A79D1FC92E3C003BE23C /* AdaptiveFormSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */; };
+		2E37A79E1FC92E3D003BE23C /* AdaptiveFormSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E37A79F1FC92E3D003BE23C /* SVGKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; };
+		2E37A7A01FC92E3D003BE23C /* SVGKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E37A7A31FC92E48003BE23C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E37A7A21FC92E48003BE23C /* CocoaLumberjack.framework */; };
+		2E37A7A41FC92E4A003BE23C /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E37A7A21FC92E48003BE23C /* CocoaLumberjack.framework */; };
+		2E37A7A51FC92E4A003BE23C /* CocoaLumberjack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E37A7A21FC92E48003BE23C /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E7DA71A1FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DA7191FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift */; };
-		2E7DA71C1FC131280001D9D8 /* AdaptiveFormSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */; };
-		2E7DA71D1FC1312D0001D9D8 /* AdaptiveFormSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */; };
-		2E7DA71E1FC1312D0001D9D8 /* AdaptiveFormSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E7DA7201FC132160001D9D8 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DA71F1FC132160001D9D8 /* SettingsViewController.swift */; };
 		2E7DA7221FC148F90001D9D8 /* ChooseEmojiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DA7211FC148F90001D9D8 /* ChooseEmojiViewController.swift */; };
 		2E81CA651FC0DCC500BAA268 /* EmojiStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E81CA631FC0DCC300BAA268 /* EmojiStyle.swift */; };
@@ -2701,6 +2699,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2E37A7A11FC92E3D003BE23C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2E37A7A01FC92E3D003BE23C /* SVGKit.framework in Embed Frameworks */,
+				2E37A7A51FC92E4A003BE23C /* CocoaLumberjack.framework in Embed Frameworks */,
+				2E37A79E1FC92E3D003BE23C /* AdaptiveFormSheet.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E7DA70E1FC126C60001D9D8 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2708,19 +2719,6 @@
 			dstSubfolderSpec = 16;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2E7DA7181FC129470001D9D8 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2E7DA7171FC129470001D9D8 /* CocoaLumberjack.framework in Embed Frameworks */,
-				2E7DA7151FC129470001D9D8 /* SVGKit.framework in Embed Frameworks */,
-				2E7DA71E1FC1312D0001D9D8 /* AdaptiveFormSheet.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -5389,8 +5387,8 @@
 		2E18D5A81FBF777D00CD5DFC /* 26f7-1f3ff.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "26f7-1f3ff.svg"; sourceTree = "<group>"; };
 		2E37A7971FC8D909003BE23C /* ForwardingNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardingNavigationController.swift; sourceTree = "<group>"; };
 		2E37A7991FC8DC9F003BE23C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		2E37A7A21FC92E48003BE23C /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = SOURCE_ROOT; };
 		2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SVGKit.framework; sourceTree = SOURCE_ROOT; };
-		2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = SVGKit.framework/CocoaLumberjack.framework; sourceTree = SOURCE_ROOT; };
 		2E7DA7191FC12BE90001D9D8 /* UIView+SafeAreaInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+SafeAreaInsets.swift"; sourceTree = "<group>"; };
 		2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdaptiveFormSheet.framework; path = Carthage/Build/iOS/AdaptiveFormSheet.framework; sourceTree = SOURCE_ROOT; };
 		2E7DA71F1FC132160001D9D8 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -5420,14 +5418,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E7DA7111FC1292B0001D9D8 /* SVGKit.framework in Frameworks */,
+				2E37A79F1FC92E3D003BE23C /* SVGKit.framework in Frameworks */,
 				2E9FA6621FC1241E002CAA12 /* Crashlytics.framework in Frameworks */,
-				2E7DA71D1FC1312D0001D9D8 /* AdaptiveFormSheet.framework in Frameworks */,
-				2E7DA71C1FC131280001D9D8 /* AdaptiveFormSheet.framework in Frameworks */,
-				2E7DA7141FC129470001D9D8 /* SVGKit.framework in Frameworks */,
-				2E7DA7131FC129360001D9D8 /* CocoaLumberjack.framework in Frameworks */,
-				2E7DA7161FC129470001D9D8 /* CocoaLumberjack.framework in Frameworks */,
+				2E37A7A31FC92E48003BE23C /* CocoaLumberjack.framework in Frameworks */,
 				2EF4CEEA1FB6BF82005AA616 /* Fabric.framework in Frameworks */,
+				2E37A7A41FC92E4A003BE23C /* CocoaLumberjack.framework in Frameworks */,
+				2E37A79D1FC92E3C003BE23C /* AdaptiveFormSheet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8159,7 +8155,7 @@
 				2EF4CEDC1FB6BF5A005AA616 /* Info.plist */,
 				2E7DA71B1FC131280001D9D8 /* AdaptiveFormSheet.framework */,
 				2E7DA7101FC1292B0001D9D8 /* SVGKit.framework */,
-				2E7DA7121FC129350001D9D8 /* CocoaLumberjack.framework */,
+				2E37A7A21FC92E48003BE23C /* CocoaLumberjack.framework */,
 				2EF4CEE91FB6BF82005AA616 /* Fabric.framework */,
 				2EF4CEE71FB6BF77005AA616 /* Crashlytics.framework */,
 			);
@@ -8195,7 +8191,8 @@
 				44F46F6B1ADD3DEB00F46BA2 /* Resources */,
 				2E2D87AB1FB6BD2B00D86B91 /* ShellScript */,
 				2E7DA70E1FC126C60001D9D8 /* CopyFiles */,
-				2E7DA7181FC129470001D9D8 /* Embed Frameworks */,
+				2E37A79C1FC92CE4003BE23C /* ShellScript */,
+				2E37A7A11FC92E3D003BE23C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -10935,6 +10932,19 @@
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run d0baaa4b39cc862e773fe2d1a007410a48ac3008 6517af0baf8dacbafc2f24832b627c05c23d906bae0195508bf1692cd9718df5";
 		};
+		2E37A79C1FC92CE4003BE23C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh SVGKit.framework/strip_frameworks.sh";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -11089,6 +11099,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -11117,6 +11128,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
