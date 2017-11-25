@@ -10,7 +10,8 @@ import Foundation
 
 struct Setting {
     
-    static let preferredEmojiStyle = EnumSetting("preferredEmojiStyle", default: EmojiStyle.system)
+    static let preferredEmojiStyle = EnumSetting("preferredEmojiStyle",
+        default: (Date() < Date(timeIntervalSince1970: 1511913600)) ? EmojiStyle.twitter : .system)
     
     // MARK: Setting struct
     
