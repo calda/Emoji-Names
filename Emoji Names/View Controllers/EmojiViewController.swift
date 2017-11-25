@@ -306,7 +306,7 @@ class EmojiViewController: UIViewController {
         
         if showCircularMask {
             let frame = emojiView.frame
-            let diameter = max(frame.size.height, frame.size.width) * 2.0
+            let diameter = max(frame.size.height, frame.size.width) * 2.65
             
             let xOffset = -(diameter - frame.width) / 2.0
             let yOffset = -(diameter - frame.height) / 2.0
@@ -324,7 +324,7 @@ class EmojiViewController: UIViewController {
             let animation = CABasicAnimation(keyPath: "transform.scale")
             animation.fromValue = 0.0
             animation.toValue = 1.0
-            animation.duration = 0.6
+            animation.duration = 0.7
             animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
             
             circle.add(animation, forKey: "scale")
